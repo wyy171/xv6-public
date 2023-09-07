@@ -125,7 +125,8 @@ sys_uniq(void) {
         if (!dflag || strcmp(current_line, prev_line) != 0) {
             if (count > 0) {
                 // Output the count and line if -c flag is set
-                printf(output_fd, "%d %s\n", count, prev_line);
+                printf(output_fd, "%d ", count);
+                printf(output_fd, "%s\n", prev_line);
             } else if (count == 0 && !dflag) {
                 // Output the unique line (if not using -d)
                 printf(output_fd, "%s\n", prev_line);
@@ -146,7 +147,8 @@ sys_uniq(void) {
     if (count > 0) {
         if (cflag) {
             // Output the count and line if -c flag is set
-            printf(output_fd, "%d %s\n", count, prev_line);
+            printf(output_fd, "%d ", count);
+            printf(output_fd, "%s\n", prev_line);
         } else if (!dflag) {
             // Output the unique line (if not using -d)
             printf(output_fd, "%s\n", prev_line);
