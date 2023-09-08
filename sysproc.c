@@ -90,6 +90,21 @@ sys_uptime(void)
   return xticks;
 }
 
+int my_strcmp(const char str1[1024], const char str2[1024]) {
+    int i = 0;
+
+    while (str1[i] != '\0' || str2[i] != '\0') {
+        if (str1[i] < str2[i])
+            return -1;
+        else if (str1[i] > str2[i])
+            return 1;
+        
+        i++;
+    }
+    
+    return 0;
+}
+
 int
 sys_uniq(void) {
     int input_fd, output_fd, cflag, iflag, dflag;
@@ -122,8 +137,8 @@ sys_uniq(void) {
         }
 
         // Implement -d flag logic (skip duplicate lines)
-        if (!dflag || strcmp(current_line, prev_line) != 0) {
-            if (count > 0) {
+        if (!dflag || my_strcmp(current_line, prev_line) != 0) {
+           if (count > 0) {
                 // Output the count and line if -c flag is set
                 printf(output_fd, "%d ", count);
                 printf(output_fd, "%s\n", prev_line);
