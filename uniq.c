@@ -27,7 +27,7 @@ int my_strcmp(const char str1[1024], const char str2[1024]) {
     return 0;
 }
 
-void
+int
 uniq(void) {
     int input_fd, cflag, iflag, dflag;
 
@@ -96,12 +96,9 @@ uniq(void) {
         }
     }
 
-    return; // Success
+    return 0; // Success
 }
 
-void
-head(void) {
-}
 
 int main(int argc, char *argv[]) {
     int cflag = 0, iflag = 0, dflag = 0;
@@ -120,10 +117,10 @@ int main(int argc, char *argv[]) {
             exit();
         }
     }
-    printf("Uniq command is getting executed in kernel mode.\n");
+    printf(2, "Uniq command is getting executed in kernel mode.\n");
     
     // Invoke the uniq system call
-    int ret = uniq(0, 1, cflag, iflag, dflag);
+    int ret = uniq(0, cflag, iflag, dflag);
 
     if (ret < 0) {
         printf(2, "uniq: syscall failed\n");
