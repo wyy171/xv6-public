@@ -10,13 +10,15 @@
 int 
 sys_uniq(void)
 {
-    return uniq();
+    uniq();
+    return 0;
 }
 
 int 
 sys_head(void)
 {
-    return head();
+    head();
+    return 0;
 }
 
 int
