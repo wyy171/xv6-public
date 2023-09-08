@@ -141,9 +141,11 @@ sys_uniq(void) {
 
         // Update prev_line
         //strcpy(prev_line, current_line);
-         while ((*prev_line++ = *current_line++) != '\0') {
-        // Copy characters from src to dest until a null terminator is encountered
-    }
+        while (*current_line != '\0') {
+           *prev_line = *current_line 
+           prev_line++;
+           current_line++;// Copy characters from current_line to prev_line until a null terminator is encountered
+        }
     }
 
     // Handle the last line (if any)
