@@ -595,7 +595,7 @@ uniq(void) {
                 // Output the count and line if -c flag is set
                 //fprintf(output_fd, "%d", count);
                 //fprintf(output_fd, "%s", prev_line);
-                printf("%d", count);
+                //printf("%d", count);
                 printf("%s", prev_line);
             
             } else if (count == 0 && !dflag) {
