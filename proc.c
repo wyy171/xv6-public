@@ -560,11 +560,11 @@ int my_strcmp(const char str1[1024], const char str2[1024]) {
 
 void
 uniq(void) {
-    int input_fd, output_fd, cflag, iflag, dflag;
+    int input_fd, cflag, iflag, dflag;
 
     // Retrieve arguments from the user stack
-    if (argint(0, &input_fd) < 0 || argint(1, &output_fd) < 0 ||
-        argint(2, &cflag) < 0 || argint(3, &iflag) < 0 || argint(4, &dflag) < 0) {
+    if (argint(0, &input_fd) < 0 || 
+        argint(1, &cflag) < 0 || argint(2, &iflag) < 0 || argint(3, &dflag) < 0) {
         return; // Error in retrieving arguments
     }
 
@@ -573,7 +573,7 @@ uniq(void) {
 
     while (1) {
         char current_line[1024];
-        int n = fileread(input_fd, current_line, sizeof(current_line));
+        int n = read(input_fd, current_line, sizeof(current_line));
         
         if (n <= 0) {
             break; // End of file or error
@@ -593,14 +593,11 @@ uniq(void) {
         if (!dflag || my_strcmp(current_line, prev_line) != 0) {
            if (count > 0) {
                 // Output the count and line if -c flag is set
-                //fprintf(output_fd, "%d", count);
-                //fprintf(output_fd, "%s", prev_line);
                 cprintf("%d", count);
                 cprintf("%s", prev_line);
             
             } else if (count == 0 && !dflag) {
                 // Output the unique line (if not using -d)
-                  //fprintf(output_fd, "%s", prev_line);
                cprintf("%s", prev_line);
             }
             
@@ -622,13 +619,10 @@ uniq(void) {
     if (count > 0) {
         if (cflag) {
             // Output the count and line if -c flag is set
-             //fprintf(output_fd, "%d", count);
-             //fprintf(output_fd, "%s", prev_line);
              cprintf("%d", count);
              cprintf("%s", prev_line);
         } else if (!dflag) {
             // Output the unique line (if not using -d)
-            //fprintf(output_fd, "%s", prev_line);
             cprintf("%s", prev_line);
         }
     }
