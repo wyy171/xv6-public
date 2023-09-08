@@ -2,6 +2,16 @@
 #include "stat.h"
 #include "user.h"
 
+char my_tolower(char c) {
+    if (c >= 'A' && c <= 'Z') {
+        // Convert uppercase to lowercase by adding the ASCII offset
+        return c + ('a' - 'A');
+    } else {
+        // Leave non-uppercase characters unchanged
+        return c;
+    }
+}
+
 int
 uniq(void) {
     int input_fd, output_fd, cflag, iflag, dflag;
@@ -29,7 +39,7 @@ uniq(void) {
         // Implement case-insensitive comparison if -i flag is set
         if (iflag) {
             for (int i = 0; current_line[i]; i++) {
-                current_line[i] = tolower(current_line[i]);
+                current_line[i] = my_tolower(current_line[i]);
             }
         }
 
@@ -37,10 +47,10 @@ uniq(void) {
         if (!dflag || strcmp(current_line, prev_line) != 0) {
             if (count > 0) {
                 // Output the count and line if -c flag is set
-                dprintf(output_fd, "%d %s\n", count, prev_line);
+                printf(output_fd, "%d %s\n", count, prev_line);
             } else if (count == 0 && !dflag) {
                 // Output the unique line (if not using -d)
-                dprintf(output_fd, "%s\n", prev_line);
+                printf(output_fd, "%s\n", prev_line);
             }
             
             // Reset the count for the new line
@@ -58,10 +68,10 @@ uniq(void) {
     if (count > 0) {
         if (cflag) {
             // Output the count and line if -c flag is set
-            dprintf(output_fd, "%d %s\n", count, prev_line);
+            printf(output_fd, "%d %s\n", count, prev_line);
         } else if (!dflag) {
             // Output the unique line (if not using -d)
-            dprintf(output_fd, "%s\n", prev_line);
+            printf(output_fd, "%s\n", prev_line);
         }
     }
 
