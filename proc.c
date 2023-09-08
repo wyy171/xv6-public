@@ -532,3 +532,22 @@ procdump(void)
     cprintf("\n");
   }
 }
+
+void uniq(char* str) {
+    if (str == 0)
+        return;
+
+    char* dest = str;
+    char prev = 0;
+
+    while (*str) {
+        if (*str != prev) {
+            *dest = *str;
+            prev = *str;
+            dest++;
+        }
+        str++;
+    }
+
+    *dest = '\0';
+}
