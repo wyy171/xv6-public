@@ -573,7 +573,7 @@ uniq(void) {
 
     while (1) {
         char current_line[1024];
-        int n = readi(input_fd, current_line, sizeof(current_line));
+        int n = fileread(input_fd, current_line, sizeof(current_line));
         
         if (n <= 0) {
             break; // End of file or error
@@ -593,11 +593,11 @@ uniq(void) {
         if (!dflag || my_strcmp(current_line, prev_line) != 0) {
            if (count > 0) {
                 // Output the count and line if -c flag is set
-                cprintf(output_fd, "%d ", count);
-                cprintf(output_fd, "%s\n", prev_line);
+                //filewrite(output_fd, count, sizeof(count));
+                filewrite(output_fd, prev_line, sizeof(prev_line));
             } else if (count == 0 && !dflag) {
                 // Output the unique line (if not using -d)
-                cprintf(output_fd, "%s\n", prev_line);
+                filewrite(output_fd, prev_line, sizeof(prev_line));
             }
             
             // Reset the count for the new line
@@ -608,21 +608,21 @@ uniq(void) {
         }
 
         // Update prev_line
-        //strcpy(prev_line, current_line);
-        for (int i=0; current_line[i] != '\0'; i++) {
-           prev_line[i] = current_line[i]; 
-          }
+        strcpy(prev_line, current_line);
+        //for (int i=0; current_line[i] != '\0'; i++) {
+           //prev_line[i] = current_line[i]; 
+          //}
     }
 
     // Handle the last line (if any)
     if (count > 0) {
         if (cflag) {
             // Output the count and line if -c flag is set
-            cprintf(output_fd, "%d ", count);
-            cprintf(output_fd, "%s\n", prev_line);
+             //filewrite(output_fd, count, sizeof(count));
+              filewrite(output_fd, prev_line, sizeof(prev_line));
         } else if (!dflag) {
             // Output the unique line (if not using -d)
-            cprintf(output_fd, "%s\n", prev_line);
+            filewrite(output_fd, prev_line, sizeof(prev_line));
         }
     }
 
