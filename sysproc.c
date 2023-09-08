@@ -89,6 +89,15 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+char my_tolower(char c) {
+    if (c >= 'A' && c <= 'Z') {
+        // Convert uppercase to lowercase by adding the ASCII offset
+        return c + ('a' - 'A');
+    } else {
+        // Leave non-uppercase characters unchanged
+        return c;
+    }
+}
 
 int my_strcmp(const char str1[1024], const char str2[1024]) {
     int i = 0;
@@ -132,7 +141,7 @@ sys_uniq(void) {
         // Implement case-insensitive comparison if -i flag is set
         if (iflag) {
             for (int i = 0; current_line[i]; i++) {
-                current_line[i] = tolower(current_line[i]);
+                current_line[i] = my_tolower(current_line[i]);
             }
         }
 
