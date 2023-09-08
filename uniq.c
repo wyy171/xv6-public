@@ -1,6 +1,8 @@
 #include "types.h"
 #include "stat.h"
 #include "user.h"
+#include <stdlib.h>
+#include <string.h>
 
 char my_tolower(char c) {
     if (c >= 'A' && c <= 'Z') {
@@ -13,8 +15,8 @@ char my_tolower(char c) {
 }
 
 int
-uniq(void) {
-    int input_fd, output_fd, cflag, iflag, dflag;
+uniq(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
+    //int input_fd, output_fd, cflag, iflag, dflag;
 
     // Retrieve arguments from the user stack
     if (argint(0, &input_fd) < 0 || argint(1, &output_fd) < 0 ||
