@@ -595,13 +595,13 @@ uniq(void) {
                 // Output the count and line if -c flag is set
                 //fprintf(output_fd, "%d", count);
                 //fprintf(output_fd, "%s", prev_line);
-                //printf("%d", count);
+                cprintf("%d", count);
                 cprintf("%s", prev_line);
             
             } else if (count == 0 && !dflag) {
                 // Output the unique line (if not using -d)
                   //fprintf(output_fd, "%s", prev_line);
-              printf("%s", prev_line);
+               cprintf("%s", prev_line);
             }
             
             // Reset the count for the new line
@@ -624,12 +624,12 @@ uniq(void) {
             // Output the count and line if -c flag is set
              //fprintf(output_fd, "%d", count);
              //fprintf(output_fd, "%s", prev_line);
-             printf("%d", count);
-             printf("%s", prev_line);
+             cprintf("%d", count);
+             cprintf("%s", prev_line);
         } else if (!dflag) {
             // Output the unique line (if not using -d)
             //fprintf(output_fd, "%s", prev_line);
-            printf("%s", prev_line);
+            cprintf("%s", prev_line);
         }
     }
 
