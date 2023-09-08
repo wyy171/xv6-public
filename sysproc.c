@@ -141,7 +141,7 @@ sys_uniq(void) {
 
         // Update prev_line
         //strcpy(prev_line, current_line);
-        for (int i=0,current_line[i] != '\0',i++) {
+        for (int i=0; current_line[i] != '\0'; i++) {
            prev_line[i] = current_line[i]; 
           }
     }
