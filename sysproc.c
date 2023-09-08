@@ -7,7 +7,7 @@
 #include "mmu.h"
 #include "proc.h"
 
-#include <stdio.h>
+
 #include <string.h>
 
 int
