@@ -1,6 +1,8 @@
 #include "types.h"
 #include "stat.h"
 #include "user.h"
+#include <string.h>
+#include <stdio.h>
 
 int main(int argc, char *argv[]) {
     int cflag = 0, iflag = 0, dflag = 0;
