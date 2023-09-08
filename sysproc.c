@@ -7,8 +7,8 @@
 #include "mmu.h"
 #include "proc.h"
 
-#include "stat.h"
-#include "user.h"
+//#include "stat.h"
+//#include "user.h"
 
 char my_tolower(char c) {
     if (c >= 'A' && c <= 'Z') {
