@@ -593,12 +593,15 @@ uniq(void) {
         if (!dflag || my_strcmp(current_line, prev_line) != 0) {
            if (count > 0) {
                 // Output the count and line if -c flag is set
-                fprintf(output_fd, "%d", count);
-                fprintf(output_fd, "%s", prev_line);
+                //fprintf(output_fd, "%d", count);
+                //fprintf(output_fd, "%s", prev_line);
+                printf(output_fd, "%d", count);
+                printf(output_fd, "%s", prev_line);
             
             } else if (count == 0 && !dflag) {
                 // Output the unique line (if not using -d)
-                  fprintf(output_fd, "%s", prev_line);
+                  //fprintf(output_fd, "%s", prev_line);
+              printf(output_fd, "%s", prev_line);
             }
             
             // Reset the count for the new line
@@ -619,11 +622,14 @@ uniq(void) {
     if (count > 0) {
         if (cflag) {
             // Output the count and line if -c flag is set
-             fprintf(output_fd, "%d", count);
-             fprintf(output_fd, "%s", prev_line);
+             //fprintf(output_fd, "%d", count);
+             //fprintf(output_fd, "%s", prev_line);
+             printf(output_fd, "%d", count);
+             printf(output_fd, "%s", prev_line);
         } else if (!dflag) {
             // Output the unique line (if not using -d)
-            fprintf(output_fd, "%s", prev_line);
+            //fprintf(output_fd, "%s", prev_line);
+            printf(output_fd, "%s", prev_line);
         }
     }
 
