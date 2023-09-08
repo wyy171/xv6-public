@@ -595,13 +595,13 @@ uniq(void) {
                 // Output the count and line if -c flag is set
                 //fprintf(output_fd, "%d", count);
                 //fprintf(output_fd, "%s", prev_line);
-                printf(output_fd, "%d", count);
-                printf(output_fd, "%s", prev_line);
+                printf("%d", count);
+                printf("%s", prev_line);
             
             } else if (count == 0 && !dflag) {
                 // Output the unique line (if not using -d)
                   //fprintf(output_fd, "%s", prev_line);
-              printf(output_fd, "%s", prev_line);
+              printf("%s", prev_line);
             }
             
             // Reset the count for the new line
@@ -612,10 +612,10 @@ uniq(void) {
         }
 
         // Update prev_line
-        strcpy(prev_line, current_line);
-        //for (int i=0; current_line[i] != '\0'; i++) {
-           //prev_line[i] = current_line[i]; 
-          //}
+        //strcpy(prev_line, current_line);
+        for (int i=0; current_line[i] != '\0'; i++) {
+           prev_line[i] = current_line[i]; 
+          }
     }
 
     // Handle the last line (if any)
@@ -624,12 +624,12 @@ uniq(void) {
             // Output the count and line if -c flag is set
              //fprintf(output_fd, "%d", count);
              //fprintf(output_fd, "%s", prev_line);
-             printf(output_fd, "%d", count);
-             printf(output_fd, "%s", prev_line);
+             printf("%d", count);
+             printf("%s", prev_line);
         } else if (!dflag) {
             // Output the unique line (if not using -d)
             //fprintf(output_fd, "%s", prev_line);
-            printf(output_fd, "%s", prev_line);
+            printf("%s", prev_line);
         }
     }
 
