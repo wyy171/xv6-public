@@ -1,8 +1,7 @@
 #include "types.h"
 #include "stat.h"
 #include "user.h"
-#include <stdlib.h>
-#include <string.h>
+
 
 char my_tolower(char c) {
     if (c >= 'A' && c <= 'Z') {
