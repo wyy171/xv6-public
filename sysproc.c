@@ -7,9 +7,6 @@
 #include "mmu.h"
 #include "proc.h"
 
-//#include "stat.h"
-//#include "user.h"
-
 char my_tolower(char c) {
     if (c >= 'A' && c <= 'Z') {
         // Convert uppercase to lowercase by adding the ASCII offset
@@ -34,54 +31,7 @@ int my_strcmp(const char str1[1024], const char str2[1024]) {
     
     return 0;
 }
-// Print to the given fd. Only understands %d, %x, %p, %s.
-void
-printf(int fd, const char *fmt, ...)
-{
-  char *s;
-  int c, i, state;
-  uint *ap;
 
-  state = 0;
-  ap = (uint*)(void*)&fmt + 1;
-  for(i = 0; fmt[i]; i++){
-    c = fmt[i] & 0xff;
-    if(state == 0){
-      if(c == '%'){
-        state = '%';
-      } else {
-        putc(fd, c);
-      }
-    } else if(state == '%'){
-      if(c == 'd'){
-        printint(fd, *ap, 10, 1);
-        ap++;
-      } else if(c == 'x' || c == 'p'){
-        printint(fd, *ap, 16, 0);
-        ap++;
-      } else if(c == 's'){
-        s = (char*)*ap;
-        ap++;
-        if(s == 0)
-          s = "(null)";
-        while(*s != 0){
-          putc(fd, *s);
-          s++;
-        }
-      } else if(c == 'c'){
-        putc(fd, *ap);
-        ap++;
-      } else if(c == '%'){
-        putc(fd, c);
-      } else {
-        // Unknown % sequence.  Print it to draw attention.
-        putc(fd, '%');
-        putc(fd, c);
-      }
-      state = 0;
-    }
-  }
-}
 int
 sys_uniq(void) {
     int input_fd, output_fd, cflag, iflag, dflag;
@@ -97,7 +47,7 @@ sys_uniq(void) {
 
     while (1) {
         char current_line[1024];
-        int n = read(input_fd, current_line, sizeof(current_line));
+        int n = readi(input_fd, current_line, sizeof(current_line));
         
         if (n <= 0) {
             break; // End of file or error
