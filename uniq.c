@@ -14,7 +14,7 @@ char my_tolower(char c) {
 }
 
 int
-uniq(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
+uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
     //int input_fd, output_fd, cflag, iflag, dflag;
 
     // Retrieve arguments from the user stack
@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
     printf(2, "Uniq command is getting executed in kernel mode.\n");
     
     // Invoke the uniq system call
-    int ret = uniq(0, 1, cflag, iflag, dflag);
+    int ret = uniq_compare(0, 1, cflag, iflag, dflag);
 
     if (ret < 0) {
         printf(2, "uniq: syscall failed\n");
