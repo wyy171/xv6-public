@@ -21,14 +21,8 @@ int main(int argc, char *argv[]) {
     int lines = 4;
 
     // Parse command-line arguments
-    for (int i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "-n") == 0) {
-            lines = atoi(argv[i+1]);
-        } else {
-            printf(2, "Usage: uniq [-c] [-i] [-d] < inputfile > outputfile\n");
-            exit();
-        }
-    }
+    if(argv[0] > 1)
+        lines = atoi(argv[2]);
     
     printf(2, "Uniq command is getting executed in kernel mode.\n");
     
