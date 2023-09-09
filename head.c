@@ -7,8 +7,8 @@ void print_head_lines(int input_fd, int n){
     int count = 0;
     while (count<n) {
         char current_line[1024];
-        int n = read(input_fd, current_line, sizeof(current_line));
-        if (n <= 0) {
+        int m = read(input_fd, current_line, sizeof(current_line));
+        if (m <= 0) {
             break; // End of file or error
         }
     printf(2, "%s\n", current_line);
