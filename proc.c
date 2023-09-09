@@ -535,9 +535,10 @@ procdump(void)
 
 void
 uniq(void) {
-    cprintf("kernel mode");
+    cprintf("Uniq command is getting executed in kernel mode");
 }
 
 void
 head(void) {
+   cprintf("Head command is getting executed in kernel mode");
 }
