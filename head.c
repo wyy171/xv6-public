@@ -11,7 +11,7 @@ void print_head_lines(int input_fd, int n){
         if (n <= 0) {
             break; // End of file or error
         }
-    cprintf("%s\n", current_line);
+    printf(2, "%s\n", current_line);
         count++;
     }
 }
