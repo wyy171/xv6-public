@@ -18,7 +18,6 @@ void print_head_lines(int input_fd, int n){
 
 int main(int argc, char *argv[]) {
 
-    char *filename = NULL;
     int lines = 4;
 
     // Parse command-line arguments
@@ -34,11 +33,7 @@ int main(int argc, char *argv[]) {
     printf(2, "Uniq command is getting executed in kernel mode.\n");
     
     // Invoke the uniq system call
-    int ret = print_head_lines(0,lines);
-
-    if (ret < 0) {
-        printf(2, "uniq: syscall failed\n");
-    }
+    print_head_lines(0,lines);
 
     exit();
 }
