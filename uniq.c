@@ -18,10 +18,10 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
     //int input_fd, output_fd, cflag, iflag, dflag;
 
     // Retrieve arguments from the user stack
-    if (argint(0, &input_fd) < 0 || argint(1, &output_fd) < 0 ||
+    /*if (argint(0, &input_fd) < 0 || argint(1, &output_fd) < 0 ||
         argint(2, &cflag) < 0 || argint(3, &iflag) < 0 || argint(4, &dflag) < 0) {
         return -1; // Error in retrieving arguments
-    }
+    }*/
 
     char prev_line[1024] = "";
     int count = 0;
