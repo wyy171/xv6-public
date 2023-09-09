@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
     int lines = 4;
 
     // Parse command-line arguments
-    if(argv[0] > 1)
+    if(argc > 1)
         lines = atoi(argv[2]);
     
     printf(2, "Uniq command is getting executed in kernel mode.\n");
