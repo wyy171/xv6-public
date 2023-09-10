@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
             exit();
         }
     }
-    printf(2, "Uniq command is getting executed in kernel mode.\n");
+    printf(1, "Uniq command is getting executed in kernel mode.\n");
     
     // Invoke the uniq system call
     int ret = uniq_compare(0, 1, cflag, iflag, dflag);
