@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
             printf(2, "head: cannot open %s \n", argv[2]);
             exit();
           }
-        if(argv[0] != "-n"){
+        if (strcmp(argv[0], "-n") != 0){
             printf(2, "head: need -n not %s", argv[0]);
             exit();
           }
