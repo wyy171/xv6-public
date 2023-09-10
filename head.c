@@ -1,40 +1,48 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <unistd.h>
+#include "types.h"
+#include "stat.h"
+#include "user.h"
 
-void print_head_lines(int input_fd, int n){
+int
+head_n(int input_fd, int output_fd, int lines) {
+
     int count = 0;
-    printf(2, "lines = %d\n", n);
-    while (count<n) {
+
+    while (1) {
         char current_line[1024];
-        int m = read(input_fd, current_line, sizeof(current_line));
-        if (m <= 0) {
+        int n = read(input_fd, current_line, sizeof(current_line));
+        
+        if (n <= 0) {
             break; // End of file or error
         }
-        current_line[m] = '\0';
-        printf(2, "%s\n", current_line);
-        count++;
+
+        // Null-terminate the line
+        current_line[n] = '\0';
+
+        // Implement -d flag logic (skip duplicate lines)
+        if (count < n) {
+            printf(output_fd, "%s\n", current_line);
+            // Increment the count for the lines
+            count ++;
+        } 
+        else break; 
     }
+
+    return 0; // Success
 }
 
 int main(int argc, char *argv[]) {
-    if (argc != 3) {
-        fprintf(stderr, "Usage: %s <filename> <n>\n", argv[0]);
-        exit(1);
+    int lines = 4;
+    if (argc == 4)
+        lines = atoi(argv[3])
+   
+    printf(2, "Head command is getting executed in kernel mode.\n");
+    
+    // Invoke the head system call
+    int ret = head_n(0, 1, lines);
+
+    if (ret < 0) {
+        printf(2, "head: syscall failed\n");
     }
-
-    char *filename = argv[1];
-    int n = atoi(argv[2]);
-
-    int fd = open(filename, O_RDONLY);
-    if (fd < 0) {
-        perror("open");
-        exit(1);
-    }
-    print_head_lines(fd, n);
-
-    close(fd);
 
     exit();
 }
