@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
         char *arg = argv[i];
         if (strcmp(arg, "-c") == 0) {
             cflag = 1;
-            printf(2, "i = %d\n", i);
+            printf(1, "i = %d\n", i);
             
         } else if (strcmp(arg, "-i") == 0) {
             iflag = 1;
