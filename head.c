@@ -5,6 +5,7 @@
 
 void print_head_lines(int input_fd, int n){
     int count = 0;
+    printf(2, "lines = %d\n", n);
     while (count<n) {
         char current_line[1024];
         int m = read(input_fd, current_line, sizeof(current_line));
@@ -16,23 +17,7 @@ void print_head_lines(int input_fd, int n){
         count++;
     }
 }
-void khead(int fd, int n) {
-    char buf[512];
-    int count = 0;
 
-    while (count < n) {
-        int nread = read(fd, buf, sizeof(buf));
-        if (nread <= 0)
-            break;
-
-        for (int i = 0; i < nread; i++) {
-            char c = buf[i];
-            putchar(c); // Replace with your kernel-specific output function
-            if (c == '\n')
-                count++;
-        }
-    }
-}
 
 int main(int argc, char *argv[]) {
 
