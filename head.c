@@ -33,7 +33,7 @@ head_n(int input_fd, int output_fd, int lines) {
 int main(int argc, char *argv[]) {
     int lines = 4;
     if (argc == 4)
-        lines = atoi(argv[3])
+        lines = atoi(argv[3]);
    
     printf(2, "Head command is getting executed in kernel mode.\n");
     
