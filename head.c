@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
         exit();
     }
     if(argc > 2){
-        lines = atoi(argv[1])  
+        lines = atoi(argv[1]);  
         if((fd = open(argv[2],0)) < 0){
             printf(2, "head: cannot open %s \n", argv[2]);
             exit();
