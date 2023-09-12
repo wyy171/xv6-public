@@ -100,6 +100,6 @@ sys_uniq(void)
 int 
 sys_head(void)
 {
-    head();
+    //head();
     return 0;
 }
