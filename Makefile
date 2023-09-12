@@ -184,8 +184,8 @@ UPROGS=\
 	_uniq\
 	_head\
 
-fs.img: mkfs README $(UPROGS)
-	./mkfs fs.img README $(UPROGS)
+fs.img: mkfs README OS611example.txt $(UPROGS)
+	./mkfs fs.img README OS611example.txt $(UPROGS)
 
 -include *.d
 
