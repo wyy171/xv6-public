@@ -74,7 +74,7 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
 
 int main(int argc, char *argv[]) {
     int cflag = 0, iflag = 0, dflag = 0;
-    
+       printf(1, "Uniq command is getting executed in kernel mode.\n");
     // Process command-line arguments
     for (int i = 1; i < argc; i++) {
         char *arg = argv[i];
@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
             exit();
         }
     }
-    printf(1, "Uniq command is getting executed in kernel mode.\n");
+    //printf(1, "Uniq command is getting executed in kernel mode.\n");
     
     // Invoke the uniq system call
     int ret = uniq_compare(0, 1, cflag, iflag, dflag);
