@@ -93,13 +93,13 @@ sys_uptime(void)
 int 
 sys_uniq(void)
 {
-    //uniq();
+    uniq();
     return 0;
 }
 
 int 
 sys_head(void)
 {
-    //head();
+    head();
     return 0;
 }
