@@ -7,20 +7,6 @@
 #include "mmu.h"
 #include "proc.h"
 
-int 
-sys_uniq(void)
-{
-    uniq();
-    return 0;
-}
-
-int 
-sys_head(void)
-{
-    head();
-    return 0;
-}
-
 int
 sys_fork(void)
 {
@@ -102,4 +88,18 @@ sys_uptime(void)
   xticks = ticks;
   release(&tickslock);
   return xticks;
+}
+
+int 
+sys_uniq(void)
+{
+    //uniq();
+    return 0;
+}
+
+int 
+sys_head(void)
+{
+    head();
+    return 0;
 }
