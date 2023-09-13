@@ -50,7 +50,7 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
 
         // Implement -d flag logic ( It only prints the repeated lines and not the lines which aren’t repeated.)
         if (!dflag || strcmp(current_line, prev_line) != 0) {
-            if (count > 0) {
+            if (count > 1) {
                 // Output the count and line if -c flag is set
                 printf(output_fd, "%d %s\n", count, prev_line);
             } else if (count == 0 && !dflag) {
