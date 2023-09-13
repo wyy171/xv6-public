@@ -30,9 +30,13 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
     // Null-terminate the buf
     buf[n] = '\0';
     int i = 0;
+
+    printf(output_fd, "buf = %s\n", buf);
      while (1) {
         char current_line[1024];
         printf(1, "i = %d\n", i);
+         printf(output_fd, "prev_line = %s\n", prev_line);
+         printf(output_fd, "current_line = %s\n", current_line);
         for (int j = 0; buf[i]!='\0' && buf[i]!='\n'; j++, i++) {
                 current_line[j] = buf[i];
             }
