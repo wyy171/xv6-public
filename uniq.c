@@ -33,14 +33,14 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
 
     while (buf[i]!='\0') {
         char current_line[1024] = "";   //initial the current line
-        char current_line_copy[1024] = "";   //initial
+        //char current_line_copy[1024] = "";   //initial
         for (int j = 0; buf[i]!='\0' && buf[i]!='\n'; j++, i++) {
             current_line[j] = buf[i];
         }
         
         
         // Implement case-insensitive comparison if -i flag is set
-        strcpy(current_line_copy, current_line);
+        //strcpy(current_line_copy, current_line);
        
         if (iflag) {
             for (int i = 0; i<sizeof(current_line) ; i++) {
@@ -67,7 +67,7 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
         }
 
         // Update prev_line
-        strcpy(prev_line, current_line_copy);
+        strcpy(prev_line, current_line);
         i++; //skip '\n', move to the next line
     }
 
