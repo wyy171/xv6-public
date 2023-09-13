@@ -18,6 +18,7 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
 
     char prev_line[1024] = "";
     int count = 0;
+  
 
     while (1) {
         char current_line[1024];
@@ -75,11 +76,13 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
 int main(int argc, char *argv[]) {
     uniq();
     int cflag = 0, iflag = 0, dflag = 0, fd=0;
+    int ret;
+    
        printf(1, "Uniq command is getting executed in user mode.\n");
     // Process command-line arguments
      if(argc < 2){
         //uniq_read(0,count, only_same, ignore_case);
-        int ret = uniq_compare(0, 1, cflag, iflag, dflag);
+        ret = uniq_compare(0, 1, cflag, iflag, dflag);
     }
     if(argc == 2){
         if((fd = open(argv[1],0)) < 0){
@@ -87,7 +90,7 @@ int main(int argc, char *argv[]) {
             exit();
         }
         //uniq_read(fd, count, only_same, ignore_case);
-        int ret = uniq_compare(fd, 1, cflag, iflag, dflag);
+        ret = uniq_compare(fd, 1, cflag, iflag, dflag);
         close(fd);
         exit();
     }
@@ -106,7 +109,7 @@ int main(int argc, char *argv[]) {
             exit();
           }
           //uniq_read(fd, count, only_same, ignore_case);
-          int ret = uniq_compare(fd, 1, cflag, iflag, dflag);
+          ret = uniq_compare(fd, 1, cflag, iflag, dflag);
           close(fd);
     }
 
