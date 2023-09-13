@@ -18,7 +18,7 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
 
     char prev_line[1024] = "";
     int count = 0;
-    char buf[512]; int n;  
+    char buf[512];  
 
    
     int n = read(input_fd, buf, sizeof(buf));
@@ -33,7 +33,7 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
      while (1) {
         char current_line[1024];
 
-        for (j = 0; buf[i]!='\0' && buf[i]!='\n'; j++, i++) {
+        for (int j = 0; buf[i]!='\0' && buf[i]!='\n'; j++, i++) {
                 current_line[j] = buf[i];
             }
          
