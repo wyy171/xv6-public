@@ -32,9 +32,9 @@ head_n(int input_fd, int lines) {
 
 int main(int argc, char *argv[]) {
     int fd;
-    int lines = 10;
+    int lines = 4;
     
-    if(argc < 2){
+    if(argc == 1){
         head_n(0, lines);
     }
     if(argc == 2){
@@ -46,13 +46,13 @@ int main(int argc, char *argv[]) {
         close(fd);
         exit();
     }
-    if(argc > 2){
-        lines = atoi(argv[1]);  
-        if((fd = open(argv[2],0)) < 0){
+    if(argc == 4){
+        lines = atoi(argv[2]);  
+        if((fd = open(argv[3],0)) < 0){
             printf(2, "head: cannot open %s \n", argv[2]);
             exit();
           }
-        if (strcmp(argv[0], "-n") != 0){
+        if (strcmp(argv[1], "-n") != 0){
             printf(2, "head: need -n not %s", argv[0]);
             exit();
           }
