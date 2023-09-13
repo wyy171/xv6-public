@@ -18,19 +18,25 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
 
     char prev_line[1024] = "";
     int count = 0;
-  
+    char buf[512]; int n;  
 
-    while (1) {
-        char current_line[1024];
-        int n = read(input_fd, current_line, sizeof(current_line));
+   
+    int n = read(input_fd, buf, sizeof(buf));
         
-        if (n <= 0) {
+    if (n <= 0) {
             break; // End of file or error
-        }
+    }
 
         // Null-terminate the line
-        current_line[n] = '\0';
+        //buf[n] = '\0';
+    
+     while (1) {
+        char current_line[1024];
 
+        for (int i = 0; buf[i]!='\0' && buf[i]!='\n'; i++) {
+                current_line[i] = buf[i];
+            }
+         
         // Implement case-insensitive comparison if -i flag is set
         if (iflag) {
             for (int i = 0; current_line[i]; i++) {
@@ -38,7 +44,7 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
             }
         }
 
-        // Implement -d flag logic (skip duplicate lines)
+        // Implement -d flag logic ( It only prints the repeated lines and not the lines which aren’t repeated.)
         if (!dflag || strcmp(current_line, prev_line) != 0) {
             if (count > 0) {
                 // Output the count and line if -c flag is set
