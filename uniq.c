@@ -67,7 +67,7 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
         }
 
         // Update prev_line
-        strcpy(prev_line, current_line_copy);
+        strcpy(prev_line, current_line);
         i++; //skip '\n', move to the next line
     }
 
