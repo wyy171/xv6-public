@@ -74,7 +74,7 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
         if (cflag) {
             // Output the count and line if -c flag is set
             printf(output_fd, "%d %s\n", count, prev_line);
-        } else if (!dflag) {
+        } else if (!dflag || (dflag && count > 1)) {
             // Output the unique line (if not using -d)
             printf(output_fd, "%s\n", prev_line);
         }
@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
     int cflag = 0, iflag = 0, dflag = 0, fd=0;
     int ret;
     
-       printf(1, "Uniq command is getting executed in user mode.\n");
+       printf(1, "\n Uniq command is getting executed in user mode.\n");
     // Process command-line arguments
      if(argc < 2){
         //uniq_read(0,count, only_same, ignore_case);
