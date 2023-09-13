@@ -43,7 +43,7 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
         strcpy(current_line_copy, current_line);
        
         if (iflag) {
-            for (int i = 0; current_line[i]; i++) {
+            for (int i = 0; current_line[i] != '\n' ; i++) {
                 current_line[i] = my_tolower(current_line[i]);
             }
         }
