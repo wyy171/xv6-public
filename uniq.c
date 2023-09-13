@@ -83,7 +83,7 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
             printf(output_fd, "%s\n", prev_line);
         }
     }
-
+    return 0;
 }
 
 int main(int argc, char *argv[]) {
