@@ -77,28 +77,38 @@ int main(int argc, char *argv[]) {
     int cflag = 0, iflag = 0, dflag = 0, fd=0;
        printf(1, "Uniq command is getting executed in user mode.\n");
     // Process command-line arguments
-    for (int i = 1; i < argc; i++) {
-        char *arg = argv[i];
-        if (strcmp(arg, "-c") == 0) {
-            cflag = 1;
-            printf(1, "i = %d\n", i);
-            
-        } else if (strcmp(arg, "-i") == 0) {
-            iflag = 1;
-        } else if (strcmp(arg, "-d") == 0) {
-            dflag = 1;
-        } else if((fd = open(argv[2],0)) < 0){
-                printf(2, "uniq: cannot open %s \n", argv[2]);
-                exit();
-        } else{
-            printf(2, "Usage: uniq [-c] [-i] [-d] < inputfile > outputfile\n");
+     if(argc < 2){
+        //uniq_read(0,count, only_same, ignore_case);
+        int ret = uniq_compare(0, 1, cflag, iflag, dflag);
+    }
+    if(argc == 2){
+        if((fd = open(argv[1],0)) < 0){
+            printf(1, "uniq: cannot open %s \n", argv[1]);
             exit();
         }
+        //uniq_read(fd, count, only_same, ignore_case);
+        int ret = uniq_compare(fd, 1, cflag, iflag, dflag);
+        close(fd);
+        exit();
     }
-   
-    
-    // Invoke the uniq system call
-    int ret = uniq_compare(fd, 1, cflag, iflag, dflag);
+    if(argc > 2){
+          if(strcmp(argv[1], "-c") == 0){
+            cflag = 1;
+            }
+          if(strcmp(argv[1], "-d") == 0){
+            dflag = 1;
+            }
+          if(strcmp(argv[1], "-i") == 0){
+            iflag = 1;
+          }
+          if((fd = open(argv[2],0)) < 0){
+            printf(1, "uniq: cannot open %s \n", argv[2]);
+            exit();
+          }
+          //uniq_read(fd, count, only_same, ignore_case);
+          int ret = uniq_compare(fd, 1, cflag, iflag, dflag);
+          close(fd);
+    }
 
     if (ret < 0) {
         printf(2, "uniq: syscall failed\n");
