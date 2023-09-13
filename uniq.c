@@ -32,13 +32,11 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
     int i = 0;
 
     while (buf[i]!='\0') {
-        char current_line[1024];
+        char current_line[1024] = "";   //initial the current line
        
-    strcpy(current_line, "");    //initial the current line
-       
-    for (int j = 0; buf[i]!='\0' && buf[i]!='\n'; j++, i++) {
-        current_line[j] = buf[i];
-    }
+        for (int j = 0; buf[i]!='\0' && buf[i]!='\n'; j++, i++) {
+            current_line[j] = buf[i];
+        }
         
         
         // Implement case-insensitive comparison if -i flag is set
