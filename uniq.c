@@ -32,12 +32,12 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
     int i = 0;
 
     printf(output_fd, "buf = %s\n", buf);
-     while (1) {
+     while (buf[i]!='\0') {
         char current_line[1024];
         printf(1, "i = %d\n", i);
          printf(output_fd, "prev_line = %s\n", prev_line);
          printf(output_fd, "current_line = %s\n", current_line);
-         i++; //skip '\n', move to the next line
+        
         for (int j = 0; buf[i]!='\0' && buf[i]!='\n'; j++, i++) {
                 current_line[j] = buf[i];
             }
@@ -70,6 +70,7 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
 
         // Update prev_line
         strcpy(prev_line, current_line);
+        i++; //skip '\n', move to the next line
     }
 
     // Handle the last line (if any)
@@ -83,7 +84,6 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
         }
     }
 
-    return 0; // Success
 }
 
 int main(int argc, char *argv[]) {
