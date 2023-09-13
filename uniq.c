@@ -34,12 +34,12 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
     printf(output_fd, "buf = %s\n", buf);
      while (buf[i]!='\0') {
         char current_line[1024];
-        printf(1, "i = %d\n", i);
+       
          
         for (int j = 0; buf[i]!='\0' && buf[i]!='\n'; j++, i++) {
                 current_line[j] = buf[i];
             }
-         printf(1, "i1 = %d\n", i);
+        
         
         // Implement case-insensitive comparison if -i flag is set
         if (iflag) {
