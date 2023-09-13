@@ -7,8 +7,8 @@ head_n(int input_fd, int lines) {
 
     int count = 0;
     char buf[512];  
-
-   
+    head();
+    printf(1, "\nHead command is getting executed in user mode.\n");
     int n = read(input_fd, buf, sizeof(buf));
         
     if (n <= 0) {
