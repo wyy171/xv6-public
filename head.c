@@ -6,25 +6,31 @@ int
 head_n(int input_fd, int lines) {
 
     int count = 0;
+    char buf[512];  
 
-    while (1) {
-        char current_line[1024];
-        int n = read(input_fd, current_line, sizeof(current_line));
+   
+    int n = read(input_fd, buf, sizeof(buf));
         
-        if (n <= 0) {
-            break; // End of file or error
+    if (n <= 0) {
+            return -1; // End of file or error
+    }
+
+    // Null-terminate the buf
+    buf[n] = '\0';
+    int i = 0;
+
+    while (buf[i]!='\0' && count < lines) {
+        char current_line[512] = "";   //initial the current line
+       
+        for (int j = 0; buf[i]!='\0' && buf[i]!='\n'; j++, i++) {
+            current_line[j] = buf[i];
         }
 
-        // Null-terminate the line
-        current_line[n] = '\0';
-
-        // Implement -d flag logic (skip duplicate lines)
-        if (count < n) {
-            printf(1, "%s\n", current_line);
-            // Increment the count for the lines
-            count ++;
-        } 
-        else break; 
+        current_line[j] = '\n';
+        
+        printf(1, "%s\n", current_line);
+        // Increment the count for the lines
+        count ++;
     }
 
     return 0; // Success
