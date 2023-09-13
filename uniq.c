@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
     
        printf(1, "\nUniq command is getting executed in user mode.\n");
     // Process command-line arguments
-     if(argc < 2){
+    if(argc < 2){
         //uniq_read(0,count, only_same, ignore_case);
         ret = uniq_compare(0, 1, cflag, iflag, dflag);
     }
@@ -100,12 +100,20 @@ int main(int argc, char *argv[]) {
             printf(1, "uniq: cannot open %s \n", argv[1]);
             exit();
         }
-        //uniq_read(fd, count, only_same, ignore_case);
         ret = uniq_compare(fd, 1, cflag, iflag, dflag);
         close(fd);
         exit();
     }
-    if(argc > 2){
+    if(argc == 3){
+        if(strcmp(argv[0], "cat") == 0 && strcmp(argv[2], "|uniq") == 0){
+            if((fd = open(argv[1],0)) < 0){
+                printf(1, "uniq: cannot open %s \n", argv[2]);
+                exit();
+            }
+            ret = uniq_compare(fd, 1, cflag, iflag, dflag);
+            close(fd);
+        }
+        else{
           if(strcmp(argv[1], "-c") == 0){
             cflag = 1;
             }
@@ -119,13 +127,18 @@ int main(int argc, char *argv[]) {
             printf(1, "uniq: cannot open %s \n", argv[2]);
             exit();
           }
-          //uniq_read(fd, count, only_same, ignore_case);
+         
           ret = uniq_compare(fd, 1, cflag, iflag, dflag);
           close(fd);
+        }
+        else {
+          printf(1, "uniq: please input the correct parameters.\n");
+          exit();
+        }
     }
 
     if (ret < 0) {
-        printf(2, "uniq: syscall failed\n");
+        printf(2, "uniq call failed\n");
     }
 
     exit();
