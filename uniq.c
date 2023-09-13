@@ -45,8 +45,8 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
          printf(output_fd, "current_line1 = %s\n", current_line);
         // Implement case-insensitive comparison if -i flag is set
         if (iflag) {
-            for (int i = 0; current_line[i]; i++) {
-                current_line[i] = my_tolower(current_line[i]);
+            for (int k = 0; current_line[k]; k++) {
+                current_line[k] = my_tolower(current_line[k]);
             }
         }
 
