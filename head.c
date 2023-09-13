@@ -21,16 +21,17 @@ head_n(int input_fd, int lines) {
 
     while (buf[i]!='\0' && count < lines) {
         char current_line[512] = "";   //initial the current line
-       
-        for (int j = 0; buf[i]!='\0' && buf[i]!='\n'; j++, i++) {
+        int j;
+        for (j = 0; buf[i]!='\0' && buf[i]!='\n'; j++, i++) {
             current_line[j] = buf[i];
         }
 
-        current_line[j] = '\n';
+        current_line[j+1] = '\n';
         
         printf(1, "%s\n", current_line);
-        // Increment the count for the lines
-        count ++;
+       
+        count ++; // Increment the count for the lines
+        i++; //skip '\n'
     }
 
     return 0; // Success
