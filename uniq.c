@@ -40,13 +40,12 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
         
         
         // Implement case-insensitive comparison if -i flag is set
+        strcpy(current_line_tolower, current_line);
         if (iflag) {
-            for (int k = 0; current_line[k]; k++) {
+            for (int k = 0; current_line[k]!='\n'; k++) {
                 current_line_tolower[k] = my_tolower(current_line[k]);
             }
-        } else {
-            strcpy(current_line_tolower, current_line);
-            }
+        } 
 
         // Implement -d flag logic ( It only prints the repeated lines and not the lines which aren’t repeated.)
         if (strcmp(current_line_tolower, prev_line) != 0 && count != 0) {
