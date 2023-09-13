@@ -27,12 +27,12 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
             return -1; // End of file or error
     }
 
-        // Null-terminate the line
-        //buf[n] = '\0';
+    // Null-terminate the buf
+    buf[n] = '\0';
     int i = 0;
      while (1) {
         char current_line[1024];
-
+        printf(1, "i = %d\n", i);
         for (int j = 0; buf[i]!='\0' && buf[i]!='\n'; j++, i++) {
                 current_line[j] = buf[i];
             }
