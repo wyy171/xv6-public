@@ -87,7 +87,7 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
 int main(int argc, char *argv[]) {
     uniq();
     int cflag = 0, iflag = 0, dflag = 0, fd=0;
-    int ret;
+    int ret=-1;
     
        printf(1, "\nUniq command is getting executed in user mode.\n");
     // Process command-line arguments
@@ -130,10 +130,6 @@ int main(int argc, char *argv[]) {
          
           ret = uniq_compare(fd, 1, cflag, iflag, dflag);
           close(fd);
-        }
-        else {
-          printf(1, "uniq: please input the correct parameters.\n");
-          exit();
         }
     }
 
