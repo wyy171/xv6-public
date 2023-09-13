@@ -16,9 +16,9 @@ char my_tolower(char c) {
 int
 uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
 
-    char prev_line[1024] = "";
+    char prev_line[512] = "";
     int count = 0;
-    char buf[1024];  
+    char buf[512];  
 
    
     int n = read(input_fd, buf, sizeof(buf));
@@ -32,15 +32,15 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
     int i = 0;
 
     while (buf[i]!='\0') {
-        char current_line[1024] = "";   //initial the current line
-        //char current_line_copy[1024] = "";   //initial
+        char current_line[512] = "";   //initial the current line
+        char current_line_copy[512] = "";   //initial
         for (int j = 0; buf[i]!='\0' && buf[i]!='\n'; j++, i++) {
             current_line[j] = buf[i];
         }
         
         
         // Implement case-insensitive comparison if -i flag is set
-        //strcpy(current_line_copy, current_line);
+        strcpy(current_line_copy, current_line);
        
         if (iflag) {
             for (int i = 0; i<sizeof(current_line) ; i++) {
@@ -67,7 +67,7 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
         }
 
         // Update prev_line
-        strcpy(prev_line, current_line);
+        strcpy(prev_line, current_line_copy);
         i++; //skip '\n', move to the next line
     }
 
