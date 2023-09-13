@@ -33,7 +33,7 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
 
     while (buf[i]!='\0') {
         char current_line[1024] = "";   //initial the current line
-       
+        char current_line_tolower[1024] = "";   //initial
         for (int j = 0; buf[i]!='\0' && buf[i]!='\n'; j++, i++) {
             current_line[j] = buf[i];
         }
@@ -42,12 +42,14 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
         // Implement case-insensitive comparison if -i flag is set
         if (iflag) {
             for (int k = 0; current_line[k]; k++) {
-                current_line[k] = my_tolower(current_line[k]);
+                current_line_tolower[k] = my_tolower(current_line[k]);
             }
-        }
+        } else {
+            strcpy(current_line_tolower, current_line);
+            }
 
         // Implement -d flag logic ( It only prints the repeated lines and not the lines which aren’t repeated.)
-        if (strcmp(current_line, prev_line) != 0 && count != 0) {
+        if (strcmp(current_line_tolower, prev_line) != 0 && count != 0) {
             if (cflag) {
                 // Output the count and line if -c flag is set
                 printf(output_fd, "%d %s\n", count, prev_line);
@@ -87,7 +89,7 @@ int main(int argc, char *argv[]) {
     int cflag = 0, iflag = 0, dflag = 0, fd=0;
     int ret;
     
-       printf(1, "\n Uniq command is getting executed in user mode.\n");
+       printf(1, "\nUniq command is getting executed in user mode.\n");
     // Process command-line arguments
      if(argc < 2){
         //uniq_read(0,count, only_same, ignore_case);
