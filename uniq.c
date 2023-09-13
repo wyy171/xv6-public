@@ -24,7 +24,7 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
     int n = read(input_fd, buf, sizeof(buf));
         
     if (n <= 0) {
-            break; // End of file or error
+            return -1; // End of file or error
     }
 
         // Null-terminate the line
