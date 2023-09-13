@@ -73,8 +73,9 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
 }
 
 int main(int argc, char *argv[]) {
-    int cflag = 0, iflag = 0, dflag = 0;
-       printf(1, "Uniq command is getting executed in kernel mode.\n");
+    uniq();
+    int cflag = 0, iflag = 0, dflag = 0, fd=0;
+       printf(1, "Uniq command is getting executed in user mode.\n");
     // Process command-line arguments
     for (int i = 1; i < argc; i++) {
         char *arg = argv[i];
@@ -86,15 +87,18 @@ int main(int argc, char *argv[]) {
             iflag = 1;
         } else if (strcmp(arg, "-d") == 0) {
             dflag = 1;
-        } else {
+        } else if((fd = open(argv[2],0)) < 0){
+                printf(2, "uniq: cannot open %s \n", argv[2]);
+                exit();
+        } else{
             printf(2, "Usage: uniq [-c] [-i] [-d] < inputfile > outputfile\n");
             exit();
         }
     }
-    //printf(1, "Uniq command is getting executed in kernel mode.\n");
+   
     
     // Invoke the uniq system call
-    int ret = uniq_compare(0, 1, cflag, iflag, dflag);
+    int ret = uniq_compare(fd, 1, cflag, iflag, dflag);
 
     if (ret < 0) {
         printf(2, "uniq: syscall failed\n");
