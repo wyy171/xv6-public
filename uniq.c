@@ -33,19 +33,20 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
 
     while (buf[i]!='\0') {
         char current_line[1024] = "";   //initial the current line
-        //char current_line_tolower[1024] = "";   //initial
+        char current_line_copy[1024] = "";   //initial
         for (int j = 0; buf[i]!='\0' && buf[i]!='\n'; j++, i++) {
             current_line[j] = buf[i];
         }
         
         
         // Implement case-insensitive comparison if -i flag is set
-       // strcpy(current_line_tolower, current_line);
-       /* if (iflag) {
-            for (int k = 0; current_line[k]!='\n'; k++) {
-                current_line_tolower[k] = my_tolower(current_line[k]);
+        strcpy(current_line_copy, current_line);
+       
+        if (iflag) {
+            for (int i = 0; current_line[i]; i++) {
+                current_line[i] = my_tolower(current_line[i]);
             }
-        } */
+        }
 
         // Implement -d flag logic ( It only prints the repeated lines and not the lines which aren’t repeated.)
         if (strcmp(current_line, prev_line) != 0 && count != 0) {
@@ -66,7 +67,7 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
         }
 
         // Update prev_line
-        strcpy(prev_line, current_line);
+        strcpy(prev_line, current_line_copy);
         i++; //skip '\n', move to the next line
     }
 
