@@ -218,6 +218,10 @@ fork(void)
 
   release(&ptable.lock);
 
+  if (np->pid == 0) {
+      np->ctime = ticks; // Record creation time
+  }
+
   return pid;
 }
 
@@ -265,6 +269,12 @@ exit(void)
   curproc->state = ZOMBIE;
   sched();
   panic("zombie exit");
+
+  if (p->pid == mypid) {
+    p->etime = ticks; // Record end time
+    p->rtime = p->etime - p->ctime; // Calculate total time
+  }
+  
 }
 
 // Wait for a child process to exit and return its pid.
