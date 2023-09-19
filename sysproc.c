@@ -23,11 +23,9 @@ sys_exit(void)
 int
 sys_wait(void)
 {
-    struct proc_stat pstat;
-    if (argptr(0, (char *)&pstat, sizeof(pstat)) < 0)
-        return -1;
-    return wait(&pstat);
+  return wait();
 }
+
 int
 sys_kill(void)
 {
