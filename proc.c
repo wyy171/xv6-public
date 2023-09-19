@@ -321,7 +321,7 @@ wait(void)
 }
 
 int
-wait(struct proc_stat *pstat)
+wait(struct proc *pstat)
 {
   struct proc *p;
   int havekids, pid;
