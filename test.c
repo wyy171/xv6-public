@@ -9,7 +9,7 @@ int main() {
     if (pid == 0) {
         exec("uniq", argv);
     } else {
-        wait(&ctime, &etime);   
+        waitx(&ctime, &etime);   
         printf(1, "Process uniq: ctime=%d, etime=%d, rtime=%d\n", ctime, etime, etime-ctime);
    
     }
@@ -18,7 +18,7 @@ int main() {
     if (pid == 0) {
         exec("head", argv);
     } else {
-        wait(&ctime, &etime);   
+        waitx(&ctime, &etime);   
         printf(1, "Process head: ctime=%d, etime=%d, rtime=%d\n", ctime, etime, etime-ctime);
     }
 
