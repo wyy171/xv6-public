@@ -3,22 +3,23 @@
 #include "user.h"
 
 int main() {
-    struct proc pstat;
+    int ctime, etime;
 
     int pid = fork();
     if (pid == 0) {
         exec("uniq", argv);
     } else {
-        wait(&pstat);
-        printf(1, "Process uniq: ctime=%d, etime=%d, rtime=%d\n", pstat.ctime, pstat.etime, pstat.rtime);
+        wait(&ctime, &etime);   
+        printf(1, "Process uniq: ctime=%d, etime=%d, rtime=%d\n", ctime, etime, etime-ctime);
+   
     }
 
     pid = fork();
     if (pid == 0) {
         exec("head", argv);
     } else {
-        wait(&pstat);
-        printf(1, "Process head: ctime=%d, etime=%d, rtime=%d\n", pstat.ctime, pstat.etime, pstat.rtime);
+        wait(&ctime, &etime);   
+        printf(1, "Process head: ctime=%d, etime=%d, rtime=%d\n", ctime, etime, etime-ctime);
     }
 
     exit();
