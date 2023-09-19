@@ -20,11 +20,30 @@ sys_exit(void)
   return 0;  // not reached
 }
 
-int
+/*int
 sys_wait(void)
 {
   return wait();
+}*/
+
+int
+sys_wait(void)
+{
+    struct proc_stat pstat;
+
+    if (argptr(0, (char *)&pstat, sizeof(pstat)) < 0)
+        return -1;
+
+    int pid = wait(&pstat);
+
+    if (pid >= 0) {
+        if (copyout(myproc()->pagetable, (uint64)&pstat, sizeof(pstat)) < 0)
+            return -1;
+    }
+
+    return pid;
 }
+
 
 int
 sys_kill(void)
