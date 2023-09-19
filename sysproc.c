@@ -20,14 +20,14 @@ sys_exit(void)
   return 0;  // not reached
 }
 
-
+int
 sys_wait(void)
 {
   return wait();
 }
 
-int
-/*sys_wait(void)
+/*int
+sys_wait(void)
 {
     int ctime, etime ;
 
