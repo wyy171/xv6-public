@@ -348,8 +348,8 @@ wait(int *ctime, int *etime)
         p->state = UNUSED;
 
         // Copy process time information 
-        ctime = p->ctime;
-        etime = p->etime;
+        *ctime = p->ctime;
+        *etime = p->etime;
         
         release(&ptable.lock);
         return pid;
