@@ -2,13 +2,14 @@
 #include "user.h"
 
 int main() {
-    struct proc_stat pstat;
+    #struct proc_stat pstat;
 
     int pid = fork();
     if (pid == 0) {
         exec("uniq", argv);
     } else {
-        wait(&pstat);
+        #wait(&pstat);
+        wait();
         printf(1, "Process uniq: ctime=%d, etime=%d, rtime=%d\n", pstat.ctime, pstat.etime, pstat.rtime);
     }
 
