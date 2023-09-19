@@ -39,9 +39,9 @@ sys_wait(void)
     if (pid >= 0) {
         //if (copyout(myproc()->pagetable, (uint64)&pstat, sizeof(pstat)) < 0)
             //return -1;
-        myproc()->ctime = pstat->ctime;
-        myproc()->etime = pstat->etime;
-        myproc()->rtime = pstat->rtime;
+        myproc()->ctime = pstat.ctime;
+        myproc()->etime = pstat.etime;
+        myproc()->rtime = pstat.rtime;
     }
 
     return pid;
