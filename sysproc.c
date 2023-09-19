@@ -20,21 +20,21 @@ sys_exit(void)
   return 0;  // not reached
 }
 
-/*int
+
 sys_wait(void)
 {
   return wait();
-}*/
+}
 
 int
-sys_wait(void)
+/*sys_wait(void)
 {
     int ctime, etime ;
 
     //if (argptr(0, (char *)&pstat, sizeof(pstat)) < 0)
         //return -1;
 
-    int pid = wait(&ctime, &etime);
+    int pid = waitx(&ctime, &etime);
 
     if (pid >= 0) {
         //if (copyout(myproc()->pagetable, (uint64)&pstat, sizeof(pstat)) < 0)
@@ -46,7 +46,7 @@ sys_wait(void)
 
     return pid;
 }
-
+*/
 
 int
 sys_kill(void)
