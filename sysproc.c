@@ -29,7 +29,7 @@ sys_wait(void)
 int
 sys_wait(void)
 {
-    struct proc_stat pstat;
+    struct proc pstat;
 
     if (argptr(0, (char *)&pstat, sizeof(pstat)) < 0)
         return -1;
