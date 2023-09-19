@@ -278,7 +278,7 @@ exit(void)
 
 // Wait for a child process to exit and return its pid.
 // Return -1 if this process has no children.
-/*int
+
 wait(void)
 {
   struct proc *p;
@@ -319,9 +319,9 @@ wait(void)
     sleep(curproc, &ptable.lock);  //DOC: wait-sleep
   }
 }
-*/
+
 int
-wait(int *ctime, int *etime)  
+waitx(int *ctime, int *etime)  
 {
   struct proc *p;
   int havekids, pid;
