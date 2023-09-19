@@ -321,7 +321,7 @@ wait(void)
 }
 */
 int
-wait(struct proc *pstat)
+wait(int *ctime, int *etime);   
 {
   struct proc *p;
   int havekids, pid;
@@ -347,10 +347,9 @@ wait(struct proc *pstat)
         p->killed = 0;
         p->state = UNUSED;
 
-        // Copy process information to the provided pstat structure
-        pstat->ctime = p->ctime;
-        pstat->etime = p->etime;
-        pstat->rtime = p->rtime;
+        // Copy process time information 
+        ctime = p->ctime;
+        etime = p->etime;
         
         release(&ptable.lock);
         return pid;
