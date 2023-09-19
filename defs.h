@@ -118,7 +118,7 @@ void            setproc(struct proc*);
 void            sleep(void*, struct spinlock*);
 void            userinit(void);
 //int             wait(void);
-int             wait(struct proc *pstat);
+int             wait(int *ctime, int *etime);   
 void            wakeup(void*);
 void            yield(void);
 void            uniq(void);
