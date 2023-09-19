@@ -29,19 +29,19 @@ sys_wait(void)
 int
 sys_wait(void)
 {
-    struct proc pstat;
+    int ctime, etime ;
 
     //if (argptr(0, (char *)&pstat, sizeof(pstat)) < 0)
         //return -1;
 
-    int pid = wait(&pstat);
+    int pid = wait(&ctime, &etime);
 
     if (pid >= 0) {
         //if (copyout(myproc()->pagetable, (uint64)&pstat, sizeof(pstat)) < 0)
             //return -1;
-        myproc()->ctime = pstat.ctime;
-        myproc()->etime = pstat.etime;
-        myproc()->rtime = pstat.rtime;
+        myproc()->ctime = ctime;
+        myproc()->etime = etime;
+        myproc()->rtime = etime - ctime;
     }
 
     return pid;
