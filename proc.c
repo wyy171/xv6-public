@@ -321,7 +321,7 @@ wait(void)
 }
 */
 int
-wait(int *ctime, int *etime);   
+wait(int *ctime, int *etime)  
 {
   struct proc *p;
   int havekids, pid;
