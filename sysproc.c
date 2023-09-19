@@ -41,7 +41,7 @@ sys_wait(void)
             //return -1;
         myproc()->ctime = pstat->ctime;
         myproc()->etime = pstat->etime;
-       
+        myproc()->rtime = pstat->rtime;
     }
 
     return pid;
