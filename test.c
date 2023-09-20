@@ -2,7 +2,7 @@
 #include "stat.h"
 #include "user.h"
 
-int main() {
+main(int argc, char *argv[])
     int ctime, etime;
 
     int pid = fork();
