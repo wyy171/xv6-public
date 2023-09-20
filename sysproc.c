@@ -26,6 +26,18 @@ sys_wait(void)
   return wait();
 }
 
+int
+sys_waitx( void ){
+
+  int *ctime, *etime;
+  if(argptr(0, (char**)&ctime, sizeof(int)) < 0)
+    return 12;
+
+  if(argptr(1, (char**)&etime, sizeof(int)) < 0)
+    return 13;
+
+  return waitx(ctime,etime);
+}
 /*int
 sys_wait(void)
 {
