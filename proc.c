@@ -338,6 +338,11 @@ waitx(int *ctime, int *etime)
       if(p->state == ZOMBIE){
         // Found one.
         pid = p->pid;
+  
+        // Copy process time information 
+        *ctime = p->ctime;
+        *etime = p->etime;
+        
         kfree(p->kstack);
         p->kstack = 0;
         freevm(p->pgdir);
@@ -347,10 +352,7 @@ waitx(int *ctime, int *etime)
         p->killed = 0;
         p->state = UNUSED;
 
-        // Copy process time information 
-        *ctime = p->ctime;
-        *etime = p->etime;
-        
+      
         release(&ptable.lock);
         return pid;
       }
