@@ -7,6 +7,7 @@ int main(int argc, char *argv[]){
     int pid = fork();
     if (pid == 0) {
         exec("uniq", argv);
+        exit();
     } else {
         int ctime, etime;
         waitx(&ctime, &etime);   
@@ -17,6 +18,7 @@ int main(int argc, char *argv[]){
     pid = fork();
     if (pid == 0) {
         exec("head", argv);
+        exit();
     } else {
         int ctime, etime;
         waitx(&ctime, &etime);   
@@ -25,3 +27,5 @@ int main(int argc, char *argv[]){
 
     exit();
 }
+
+
