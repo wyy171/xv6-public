@@ -274,10 +274,10 @@ exit(void)
   curproc->state = ZOMBIE;
   sched();
   panic("zombie exit");
-  if (myproc()->pid == p->pid) {
+  //if (myproc()->pid == p->pid) {
     p->etime = ticks; // Record end time
     p->rtime = p->etime - p->ctime; // Calculate total time
-  }
+  //}
   
 }
 
