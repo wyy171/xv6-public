@@ -550,6 +550,11 @@ kill(int pid)
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
     if(p->pid == pid){
       p->killed = 1;
+      
+      acquire(&tickslock);
+      p->etime = ticks;
+      release(&tickslock);
+      
       // Wake process from sleep if necessary.
       if(p->state == SLEEPING)
         p->state = RUNNABLE;
