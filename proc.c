@@ -239,7 +239,12 @@ exit(void)
   struct proc *curproc = myproc();
   struct proc *p;
   int fd;
-
+  
+  acquire(&tickslock);
+  curproc->etime = ticks; // Record end time
+  curproc->rtime = curproc->etime - curproc->ctime; // Calculate total time
+  release(&tickslock);
+  
   if(curproc == initproc)
     panic("init exiting");
 
