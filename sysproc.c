@@ -38,27 +38,12 @@ sys_waitx( void ){
 
   return waitx(ctime,etime);
 }
-/*int
-sys_wait(void)
+
+int
+sys_cps(void)
 {
-    int ctime, etime ;
-
-    //if (argptr(0, (char *)&pstat, sizeof(pstat)) < 0)
-        //return -1;
-
-    int pid = waitx(&ctime, &etime);
-
-    if (pid >= 0) {
-        //if (copyout(myproc()->pagetable, (uint64)&pstat, sizeof(pstat)) < 0)
-            //return -1;
-        myproc()->ctime = ctime;
-        myproc()->etime = etime;
-        myproc()->rtime = etime - ctime;
-    }
-
-    return pid;
+  return cps();
 }
-*/
 
 int
 sys_kill(void)
