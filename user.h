@@ -26,6 +26,7 @@ int uptime(void);
 int uniq(void);
 int head(void);
 int waitx(int*, int*);
+int ps(void);
 
 // ulib.c
 int stat(const char*, struct stat*);
