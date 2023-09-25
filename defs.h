@@ -123,7 +123,7 @@ void            yield(void);
 void            uniq(void);
 void            head(void);
 int             waitx(int*, int*); 
-int             cps(void);
+int             ps(void);
 
 // swtch.S
 void            swtch(struct context**, struct context*);
