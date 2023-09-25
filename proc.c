@@ -393,7 +393,6 @@ int ps() {
     cprintf("name \t pid \t state \t \t CREATE_TIME \t RUNTIME \n");
   //PID number, process status (running, zombie, wait, etc.), start time, total time, and process name.
     
-    char pinfo_name[] = "getpinfo";
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
     {
         if(p->state == SLEEPING){
