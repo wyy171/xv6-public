@@ -40,9 +40,9 @@ sys_waitx( void ){
 }
 
 int
-sys_cps(void)
+sys_ps(void)
 {
-  return cps();
+  return ps();
 }
 
 int
