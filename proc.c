@@ -381,6 +381,60 @@ waitx(int *ctime, int *etime)
   }
 }
 
+int ps() {
+
+    struct proc *p;
+
+    // Enable interrupts on this processor.
+    sti();
+
+    // Loop over process table looking for process with pid.
+    acquire(&ptable.lock);
+    cprintf("name \t pid \t state \t \t priority \t CREATE_TIME \t RUNTIME \n");
+    // cprintf("%s \t %d \t SLEEPING \t %d\n", p->name, p->pid, p->priority);
+    char pinfo_name[] = "getpinfo";
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+    {
+      if(strcmp(pinfo_name, p->name) == 0){
+        if(p->state == SLEEPING){
+          cprintf("%s %d \t SLEEPING \t %d \t\t %d \t\t %d \n",p->name, p->pid, p->priority, p->ctime, p->rtime);
+        }
+        else if(p->state == RUNNABLE){
+          cprintf("%s %d \t RUNNABLE \t %d \t\t %d \t\t %d \n",p->name, p->pid, p->priority, p->ctime, p->rtime);
+        }
+        else if(p->state == RUNNING){
+          cprintf("%s %d \t RUNNING \t %d \t\t %d \t\t %d \n",p->name, p->pid, p->priority, p->ctime, p->rtime);
+        }
+        else if(p->state == ZOMBIE){
+          cprintf("%s %d \t ZOMBIE \t %d \t\t %d \t\t %d \n",p->name, p->pid, p->priority, p->ctime, p->rtime);
+        }
+      }
+      else{
+        if(p->state == SLEEPING){
+          cprintf("%s \t %d \t SLEEPING \t %d \t\t %d \t\t %d \n",p->name, p->pid, p->priority, p->ctime, p->rtime);
+        }
+        else if(p->state == RUNNABLE){
+          cprintf("%s \t %d \t RUNNABLE \t %d \t\t %d \t\t %d \n",p->name, p->pid, p->priority, p->ctime, p->rtime);
+        }
+        else if(p->state == RUNNING){
+          cprintf("%s \t %d \t RUNNING \t %d \t\t %d \t\t %d \n",p->name, p->pid, p->priority, p->ctime, p->rtime);
+        }
+        else if(p->state == ZOMBIE){
+          cprintf("%s \t %d \t ZOMBIE \t %d \t\t %d \t\t %d \n",p->name, p->pid, p->priority, p->ctime, p->rtime);
+        }
+        // else if(p->state == UNUSED){
+        //   cprintf("%s \t %d \t UNUSED \t %d \t\t %d \t\t %d \n",p->name, p->pid, p->priority, p->ctime, p->rtime);
+        // }
+      }
+    }
+
+    release(&ptable.lock);
+
+    return 22;
+}
+
+
+
 //PAGEBREAK: 42
 // Per-CPU process scheduler.
 // Each CPU calls scheduler() after setting itself up.
