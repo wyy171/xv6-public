@@ -23,4 +23,4 @@
 #define SYS_uniq   22
 #define SYS_head   23
 #define SYS_waitx  24
-#define SYS_cps    25
+#define SYS_ps     25
