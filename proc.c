@@ -483,11 +483,10 @@ scheduler(void)
 void
 scheduler(void)
 {
-  struct proc *p = 0, *minP = 0, *highP = 0, *p1 = 0;
+  struct proc *p = 0;
   struct cpu *c = mycpu();
   c->proc = 0;
-  int index1 = 0, index2 = 0, index3 = 0;
-  
+ 
   for(;;){
     // Enable interrupts on this processor.
     sti();
