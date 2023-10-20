@@ -414,7 +414,27 @@ int ps() {
     return 25;
 }
 
+// Change priority
+int
+setpr(int pid, int priority)
+{
+    struct proc *p;
 
+    acquire(&ptable.lock);
+    acquire(&tickslock);
+    for(p=ptable.proc; p<&ptable.proc[NPROC]; p++)
+    {
+        if(p->pid == pid)
+        {
+            p->priority = priority;
+            break;
+        }
+    }
+    release(&ptable.lock);
+    release(&tickslock);
+
+    return pid;
+}
 
 //PAGEBREAK: 42
 // Per-CPU process scheduler.
@@ -424,7 +444,7 @@ int ps() {
 //  - swtch to start running that process
 //  - eventually that process transfers control
 //      via swtch back to the scheduler.
-void
+/*void
 scheduler(void)
 {
   struct proc *p;
@@ -458,7 +478,104 @@ scheduler(void)
     release(&ptable.lock);
 
   }
+}*/
+
+void
+scheduler(void)
+{
+  struct proc *p = 0, *minP = 0, *highP = 0, *p1 = 0;
+  struct cpu *c = mycpu();
+  c->proc = 0;
+  int index1 = 0, index2 = 0, index3 = 0;
+  
+  for(;;){
+    // Enable interrupts on this processor.
+    sti();
+
+    // Loop over process table looking for process to run.
+    acquire(&ptable.lock);
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+
+      //------- DEFAULT Round-Robin scheduler  --------
+      #ifdef DEFAULT
+        if(p->state != RUNNABLE)
+          continue;
+      //-------   end default scheduler -----------------
+
+      #else
+      #ifdef FCFS
+      //--------   FCFS SCHEDULER START   -------------
+        // struct proc *minP = 0;
+
+        if(p->state != RUNNABLE)
+          continue;
+
+        // ignore init and sh processes from FCFS
+        if(p->pid > 2)
+        {
+          if (minP != 0){
+            // here I find the process with the lowest creation time (the first one that was created)
+            if(p->ctime < minP->ctime){
+              minP = p;
+            }
+          }
+          else{
+            minP = p;
+          }
+        }
+
+        // If I found the process which I created first and it is runnable I run it
+        //(in the real FCFS I should not check if it is runnable, but for testing purposes I have to make this control, otherwise every time I launch
+        // a process which does I/0 operation (every simple command) everything will be blocked
+        if(minP != 0 && minP->state == RUNNABLE){
+          p = minP;
+        }
+
+      // --------------   FCFS SCHEDULER END   ---------------
+      #else
+      #ifdef PRIORITY
+      // -----------   PRIORITY SCEHDULER START ---------------
+        // struct proc *highP = 0;
+        // struct proc *p1 = 0;
+
+        if(p->state != RUNNABLE)
+          continue;
+        // Choose the process with highest priority (among RUNNABLEs)
+        highP = p;
+        for(p1 = ptable.proc; p1 < &ptable.proc[NPROC]; p1++){
+          if((p1->state == RUNNABLE) && (highP->priority > p1->priority))
+            highP = p1;
+        }
+
+        if(highP != 0){
+          p = highP;
+        }
+      // -----------   PRIORITY SCHEDULER END -----------------
+      #endif
+      #endif
+      #endif
+
+      if(p != 0){
+        // Switch to chosen process.  It is the process's job
+        // to release ptable.lock and then reacquire it
+        // before jumping back to us.
+        c->proc = p;
+        switchuvm(p);
+        p->state = RUNNING;
+
+        swtch(&(c->scheduler), p->context);
+        switchkvm();
+
+        // Process is done running for now.
+        // It should have changed its p->state before coming back.
+        c->proc = 0;
+      }
+    }
+    release(&ptable.lock);
+
+  }
 }
+
 
 // Enter scheduler.  Must hold only ptable.lock
 // and have changed proc->state. Saves and restores
