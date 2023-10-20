@@ -21,7 +21,7 @@ main(int argc, char *argv[])
         exit();
     }
     printf(1, "pid=%d, pr=%d\n", pid, priority);
-    chpr(pid, priority);
+    setpr(pid, priority);
 
     exit();
 }
