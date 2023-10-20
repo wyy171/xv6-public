@@ -55,7 +55,7 @@ sys_setpr(void)
     if(argint(1, &pr) < 0)
         return -1;
 
-    return chpr(pid, pr);
+    return setpr(pid, pr);
 }
 
 int
