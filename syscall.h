@@ -24,3 +24,4 @@
 #define SYS_head   23
 #define SYS_waitx  24
 #define SYS_ps     25
+#define SYS_setpr  26
