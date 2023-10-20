@@ -109,6 +109,7 @@ extern int sys_uniq(void);
 extern int sys_head(void);
 extern int sys_waitx(void);
 extern int sys_ps(void);
+extern int sys_setpr(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -136,6 +137,7 @@ static int (*syscalls[])(void) = {
 [SYS_head]    sys_head,
 [SYS_waitx]   sys_waitx,
 [SYS_ps]      sys_ps,
+[SYS_setpr]   sys_setpr,
 };
 
 void
