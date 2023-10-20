@@ -124,7 +124,7 @@ void            uniq(void);
 void            head(void);
 int             waitx(int*, int*); 
 int             ps(void);
-
+int             setpr(int pid, int priority);
 // swtch.S
 void            swtch(struct context**, struct context*);
 
