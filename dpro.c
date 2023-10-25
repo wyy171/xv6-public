@@ -8,8 +8,6 @@ int main(int argc, char *argv[])
     int k, n, pid;
     int x=0, z;
 
-    int ipr;
-
     if(argc < 2)
         n = 1;  // default value
     else
@@ -25,8 +23,6 @@ int main(int argc, char *argv[])
             printf(1, "%d failed in fork!\n", getpid());
         else if(pid > 0)
         {   // Parent
-            int id1 = getpid();
-            setpr(id1, ipr);
             printf(1, "Parent %d creating child %d\n", getpid(), pid);
             wait();
         }
