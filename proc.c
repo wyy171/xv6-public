@@ -397,16 +397,16 @@ int ps() {
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
     {
         if(p->state == SLEEPING){
-          cprintf("%s \t %d \t SLEEPING \t %d \t\t %d \n",p->name, p->pid, p->ctime, p->rtime);
+          cprintf("%s \t %d \t SLEEPING \t %d \t\t %d  \t %d \n",p->name, p->pid, p->ctime, p->rtime, p->priority);
         }
         else if(p->state == RUNNABLE){
-          cprintf("%s \t %d \t RUNNABLE \t %d \t\t %d \n",p->name, p->pid, p->ctime, p->rtime);
+          cprintf("%s \t %d \t RUNNABLE \t %d \t\t %d  \t %d \n",p->name, p->pid, p->ctime, p->rtime, p->priority);
         }
         else if(p->state == RUNNING){
-          cprintf("%s \t %d \t RUNNING \t %d \t\t %d \n",p->name, p->pid, p->ctime, p->rtime);
+          cprintf("%s \t %d \t RUNNING \t %d \t\t %d  \t %d \n",p->name, p->pid, p->ctime, p->rtime, p->priority);
         }
         else if(p->state == ZOMBIE){
-          cprintf("%s \t %d \t ZOMBIE \t %d \t\t %d \n",p->name, p->pid, p->ctime, p->rtime);
+          cprintf("%s \t %d \t ZOMBIE \t %d \t\t %d  \t %d \n",p->name, p->pid, p->ctime, p->rtime, p->priority);
         }
     }
 
