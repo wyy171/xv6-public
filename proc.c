@@ -391,7 +391,7 @@ int ps() {
 
     // Loop over process table looking for process with pid.
     acquire(&ptable.lock);
-    cprintf("name \t pid \t state \t \t CREATE_TIME \t RUNTIME \n");
+    cprintf("name \t pid \t state \t \t CREATE_TIME \t RUNTIME \t PRIORITY\n");
   //PID number, process status (running, zombie, wait, etc.), start time, total time, and process name.
     
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
