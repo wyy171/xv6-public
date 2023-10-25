@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
         else if(pid > 0)
         {   // Parent
             int id1 = getpid();
-            chpr(id1, ipr);
+            setpr(id1, ipr);
             printf(1, "Parent %d creating child %d\n", getpid(), pid);
             wait();
         }
