@@ -445,7 +445,7 @@ setpr(int pid, int priority)
 //  - swtch to start running that process
 //  - eventually that process transfers control
 //      via swtch back to the scheduler.
-/*void
+void
 scheduler(void)
 {
   struct proc *p;
@@ -455,7 +455,7 @@ scheduler(void)
   for(;;){
     // Enable interrupts on this processor.
     sti();
-
+    struct proc *highP;
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
@@ -465,6 +465,15 @@ scheduler(void)
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
       // before jumping back to us.
+      highP = P;
+      for(p1 = ptable.proc; p1 < &ptable.proc[NPROC]; p1++){
+        if(p1->state != RUNNABLE)
+          continue;
+        if(highP->priority > p1->priority)
+          highP = P1;
+      }
+
+      p = highP; 
       c->proc = p;
       switchuvm(p);
       p->state = RUNNING;
@@ -479,8 +488,8 @@ scheduler(void)
     release(&ptable.lock);
 
   }
-}*/
-
+}
+/*
 void
 scheduler(void)
 {
@@ -575,7 +584,7 @@ scheduler(void)
 
   }
 }
-
+*/
 
 // Enter scheduler.  Must hold only ptable.lock
 // and have changed proc->state. Saves and restores
