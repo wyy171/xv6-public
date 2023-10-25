@@ -6,7 +6,7 @@
 int main(int argc, char *argv[])
 {
     int k, n, pid;
-    int x=0, z;
+    int x, z;
 
     if(argc < 2)
         n = 1;  // default value
@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     x=0;
     pid = 0;
     
-    for(k = 0; k<0; k++){
+    for(k = 0; k<n; k++){
         pid = fork();
         if(pid < 0)
             printf(1, "%d failed in fork!\n", getpid());
