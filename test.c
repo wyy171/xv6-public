@@ -8,7 +8,7 @@ void long_task(int priority, char* program) {
         printf(1, "Fork failed.\n");
     } else if (pid == 0) {
         // Child process
-        set_priority(priority); // Set the priority
+        setpr(priority); // Set the priority
         exec(program, 0);
         printf(1, "Exec failed for %s\n", program);
         exit();
