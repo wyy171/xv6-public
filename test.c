@@ -13,6 +13,8 @@ void long_task(int priority, char* program) {
         if (exec(program, 0) < 0) {
             printf(1, "Exec failed for %s\n", program);
         }
+        else 
+            printf(1, "Exec succeed for %s\n", program);
         exit();
     }
 }
