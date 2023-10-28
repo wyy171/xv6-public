@@ -9,7 +9,7 @@ void long_task(int priority, char* program) {
     } else if (pid == 0) {
         // Child process
         setpr(pid, priority); // Set the priority
-        exec(program, 0);
+        exec(program, "OS611example.txt");
         if (exec(program, "OS611example.txt") < 0) {
             printf(1, "Exec failed for %s\n", program);
         }
