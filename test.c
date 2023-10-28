@@ -9,8 +9,10 @@ void long_task(int priority, char* program) {
     } else if (pid == 0) {
         // Child process
         setpr(pid, priority); // Set the priority
-        exec(program, "OS611example.txt");
-        if (exec(program, "OS611example.txt") < 0) {
+        char *argv[] = { "uniq", "input.txt", 0 }; // Adjust the arguments as needed
+        exec(program, argv);
+        
+        if (exec(program, argv) < 0) {
             printf(1, "Exec failed for %s\n", program);
         }
         else 
