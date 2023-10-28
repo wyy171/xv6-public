@@ -9,7 +9,7 @@ void long_task(int priority, char* program) {
     } else if (pid == 0) {
         // Child process
         setpr(pid, priority); // Set the priority
-        char *argv[] = { "uniq", "input.txt", 0 }; // Adjust the arguments as needed
+        char *argv[] = { "uniq", "OS611example.txt", 0 }; // Adjust the arguments as needed
         exec(program, argv);
         
         if (exec(program, argv) < 0) {
