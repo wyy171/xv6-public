@@ -445,6 +445,7 @@ setpr(int pid, int priority)
 //  - swtch to start running that process
 //  - eventually that process transfers control
 //      via swtch back to the scheduler.
+/*
 void
 scheduler(void)
 {
@@ -490,6 +491,208 @@ scheduler(void)
 
   }
 }
+*/
+
+void
+scheduler(void)
+{
+  struct cpu *c = mycpu();
+  c->proc = 0;
+
+  //cprintf("%s", "\n");
+  //cprintf("%s", "out of for(;;) loop \n");
+  //cprintf("%s", "\n");
+
+  for(;;){
+
+    //cprintf("%s", "inside of for(;;) loop \n");
+
+    // Enable interrupts on this processor.
+    sti();
+
+    // Loop over process table looking for process to run.
+    acquire(&ptable.lock);
+
+    #ifdef DEFAULT
+    // cprintf("%s","DEFAULT Running...");
+    struct proc *p;
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+      if(p->state != RUNNABLE)
+        continue;
+    //   Switch to chosen process.  It is the process's job
+    //   to release ptable.lock and then reacquire it
+    //   before jumping back to us.
+
+    c->proc = p;
+    switchuvm(p);
+    p->state = RUNNING;
+
+    uint sched_time = time_scheduled(p->pid);
+    if (sched_time == -1)
+    {
+        //print error if we want
+        p->rtime = 0;
+    }
+
+    p->ctime = p->ctime + p->rtime;
+
+    // uint ct = p->ctime;
+    // uint rt = p->rtime;
+    // int pppid = p -> pid;
+
+    p->rtime = 0;
+
+    //cprintf("DEFAULT: The start time of current process is %d \n", p->ctime);
+
+    swtch(&(c->scheduler), p->context);
+    switchkvm();
+
+    acquire(&tickslock);
+    p->rtime = ticks;
+    release(&tickslock);
+
+    // cprintf("Process ID: %d -- ", pppid);
+    // cprintf("Run time: %d -- ", rt);
+    // cprintf("Total run time: %d\n", ct);
+
+
+    // Process is done running for now.
+    // It should have changed its p->state before coming back.
+    c->proc = 0;
+    
+    }
+
+    #else
+
+    #ifdef FIFO
+    // cprintf("%s","FIFO Running...");
+    struct proc* mst = 0, * p = 0;
+    // go through process table
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+        if(p->state != RUNNABLE )
+            continue;
+
+        // ignore init and sh processes from FCFS
+        if(mst != 0){
+            // here I find the process with the lowest creation time (the first one that was created)
+            if(mst->start >= p->start)
+            {
+                mst = p;
+            }
+        }
+        else
+        {
+           mst = p;
+        }
+    }  
+
+    if(mst != 0){
+        // Switch process
+        //cprintf("FIFO: The start time of current process is %d \n", mst->start);
+        c->proc = mst;
+        switchuvm(mst);
+        mst->state = RUNNING;
+
+        acquire(&tickslock);
+        p->rtime = ticks;
+        release(&tickslock);
+
+        uint sched_time = time_scheduled(p->pid);
+        if (sched_time == -1)
+        {
+            //print error if we want
+            p->rtime = 0;
+        }
+        p->ctime = p->ctime + p->rtime;
+
+        // p->stime = 0;
+
+        // uint ct = p->ctime;
+        // uint rt = p->rtime;
+        // // uint st = p->stime;
+        // int pppid = p -> pid;
+
+        // cprintf("cpu %d, pname %s, pid %d, rtime %d\n", c->apicid, mst->name, mst->pid, mst->rtime);
+        swtch(&(c->scheduler), mst->context);
+        switchkvm();
+
+        cprintf("Process ID: %d -- ", p->pid);
+        // cprintf("Start time: %d -- ", p->stime);
+        // cprintf("Concurrent time: %d -- ", ct);
+        cprintf("Run time: %d -- ", p->rtime);
+
+
+        // Process is done running for now.
+        // It should have changed its p->state before coming back.
+        c->proc = 0;
+        // release(&ptable.lock);
+    }
+    #else
+
+    #ifdef PRIORITY
+    struct proc* maxprio;
+    struct proc* p, * r;
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+      if(p->state != RUNNABLE)
+        continue;
+
+      // Switch process
+      maxprio = p;
+      for (r = ptable.proc; r < &ptable.proc[NPROC]; r++) {
+          if (r->state != RUNNABLE)
+              continue;
+          //get the highest value of priority
+          if (r->priority <= maxprio->priority)
+              maxprio = r;
+      }
+      p = maxprio;
+      c->proc = p;
+      switchuvm(p);
+      p->state = RUNNING;
+
+      uint sched_time = time_scheduled(p->pid);
+      if (sched_time == -1)
+      {
+        //print error if we want
+        p->rtime = 0;
+      }
+
+      p->ctime = p->ctime + p->rtime;
+
+      uint ct = p->ctime;
+      uint rt = p->rtime;
+      int pppid = p -> pid;
+
+
+      p->rtime = 0;
+
+      swtch(&(c->scheduler), p->context);
+      switchkvm();
+
+      acquire(&tickslock);
+      p->rtime = ticks;
+      release(&tickslock);
+
+      cprintf("Process ID: %d -- ", pppid);
+      cprintf("Run time: %d -- ", rt);
+      cprintf("Total run time: %d\n", ct);
+
+
+      // Process is done running for now.
+      // It should have changed its p->state before coming back.
+      c->proc = 0;
+    }
+
+    #endif
+    #endif
+    #endif
+
+    release(&ptable.lock);
+
+  }
+}
+
+
 /*
 void
 scheduler(void)
