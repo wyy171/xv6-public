@@ -445,7 +445,7 @@ setpr(int pid, int priority)
 //  - swtch to start running that process
 //  - eventually that process transfers control
 //      via swtch back to the scheduler.
-/*
+
 void
 scheduler(void)
 {
@@ -491,8 +491,8 @@ scheduler(void)
 
   }
 }
-*/
 
+/*
 void
 scheduler(void)
 {
@@ -692,7 +692,7 @@ scheduler(void)
   }
 }
 
-
+*/
 /*
 void
 scheduler(void)
