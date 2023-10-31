@@ -46,16 +46,20 @@ int main(int argc, char *argv[]) {
         long_task(1, program, file_name); // Priority 1 for FCFS
 
         // Measure start time of process
-        int start_time = uptime();
+        //int start_time = uptime();
 
         // Wait for the child process to finish
-        wait();
+        //wait();
 
         // Measure finish time of process
-        int finish_time = uptime();
+        //int finish_time = uptime();
 
-        wait_time += start_time;
-        turnaround_time += finish_time;
+        int ctime, etime;
+        waitx(&ctime, &etime);   
+        printf(1, "Process %s: ctime=%d, etime=%d, rtime=%d\n", argv[1], ctime, etime, etime-ctime);
+        
+        wait_time += ctime;
+        turnaround_time += etime;
     }
 
     // Calculate average wait and turnaround times for FCFS
