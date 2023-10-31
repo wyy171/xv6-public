@@ -44,11 +44,7 @@ int main(int argc, char *argv[]) {
         
         //char* program = i == 0 ? "uniq" : "head"; // Run uniq for user and kernel
         long_task(1, program, file_name); // Priority 1 for FCFS
-
-          }
-     // Wait for child processes to complete
-    for (int i = 0; i < num_processes; i++) {
-        
+   
            // Measure start time of process
         int start_time = uptime();
 
