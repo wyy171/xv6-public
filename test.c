@@ -20,8 +20,8 @@ void long_task(int priority, char* program, char *file_name) {
             printf(1, "Exec succeed for %s\n", program);
         exit();
     }
-    else
-        wait();
+    //else
+        //wait();
 }
 
 
