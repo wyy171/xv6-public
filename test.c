@@ -45,19 +45,24 @@ int main(int argc, char *argv[]) {
         //char* program = i == 0 ? "uniq" : "head"; // Run uniq for user and kernel
         long_task(1, program, file_name); // Priority 1 for FCFS
 
-         // Measure start time of process
+          }
+     // Wait for child processes to complete
+    for (int i = 0; i < num_processes; i++) {
+        
+           // Measure start time of process
         int start_time = uptime();
 
         // Wait for the child process to finish
-        wait();
+        int ctime, etime;
+        waitx(&ctime, &etime);      
 
         // Measure finish time of process
         int finish_time = uptime();
 
-        wait_time += start_time;
-        turnaround_time += finish_time;
+        wait_time += start_time-ctime;
+        turnaround_time += finish_time-ctime;
+        
     }
-
     // Calculate average wait and turnaround times for FCFS
     int avg_wait_time_fcfs = wait_time / num_processes;
     int avg_turnaround_time_fcfs = turnaround_time / num_processes;
@@ -73,23 +78,23 @@ int main(int argc, char *argv[]) {
         char *file_name = argv[2 + 3 * i];
         int priority = atoi(argv[3 + 3 * i]);
         long_task(priority, program, file_name); 
-
-       
-        
+   
     }
      // Wait for child processes to complete
     for (int i = 0; i < num_processes; i++) {
-         // Measure start time of process
+        
+           // Measure start time of process
         int start_time = uptime();
 
         // Wait for the child process to finish
-        wait();
+        int ctime, etime;
+        waitx(&ctime, &etime);      
 
         // Measure finish time of process
         int finish_time = uptime();
 
-        wait_time += start_time;
-        turnaround_time += finish_time;
+        wait_time += start_time-ctime;
+        turnaround_time += finish_time-ctime;
         
     }
 
