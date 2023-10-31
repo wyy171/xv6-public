@@ -2,17 +2,15 @@
 #include "user.h"
 
 // Function to simulate a long-running task
-void long_task(int priority, char* program) {
+void long_task(int priority, char* program, char *file_name) {
     int pid = fork();
     if (pid < 0) {
         printf(1, "Fork failed.\n");
     } else if (pid == 0) {
         // Child process
         setpr(pid, priority); // Set the priority
-        char *argv[] = { program, "OS611example.txt", 0 }; // Adjust the arguments as needed
-        //char *args[] = {process_name, "OS611example.txt", 0};
-            //exec(process_name, args);
-
+        char *argv[] = { program, file_name, 0 }; // Adjust the arguments as needed
+       
         exec(program, argv);
         
         if (exec(program, argv) < 0) {
@@ -43,7 +41,7 @@ int main(int argc, char *argv[]) {
         //int priority = atoi(argv[3 + 2 * i]);
         
         //char* program = i == 0 ? "uniq" : "head"; // Run uniq for user and kernel
-        long_task(1, program); // Priority 1 for FCFS
+        long_task(1, program, file_name); // Priority 1 for FCFS
 
         // Measure start time of process
         int start_time = uptime();
@@ -72,7 +70,7 @@ int main(int argc, char *argv[]) {
         char *program = argv[1 + 2 * i];
         char *file_name = argv[2 + 2 * i];
         int priority = atoi(argv[3 + 2 * i]);
-        long_task(priority, program); 
+        long_task(priority, program, file_name); 
 
         // Measure start time of process
         int start_time = uptime();
@@ -113,8 +111,8 @@ int main(int argc, char *argv[]) {
             exit();
         } else if (pid == 0) {
             // Child process
-            setpriority(priority);
-            
+            //setpriority(priority);
+            setpr(priority);
             // Execute the process using exec()
             char *args[] = {process_name, 0};
             exec(process_name, args);
