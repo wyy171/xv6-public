@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
     printf(1, "FCFS Scheduling:\n");
     for (int i = 0; i < num_processes; i++) {
          char *program = argv[1 + 2 * i];
-        //int priority = atoi(argv[2 + 2 * i);
+        //int priority = atoi(argv[2 + 2 * i]);
         
         //char* program = i == 0 ? "uniq" : "head"; // Run uniq for user and kernel
         long_task(1, program); // Priority 1 for FCFS
