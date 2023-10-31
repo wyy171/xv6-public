@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
     // FCFS Scheduling
     printf(1, "FCFS Scheduling:\n");
     for (int i = 0; i < num_processes; i++) {
-        char* program = i == 0 ? "uniq" : "uniq_kernel"; // Run uniq for user and kernel
+        char* program = i == 0 ? "uniq" : "head"; // Run uniq for user and kernel
         long_task(1, program); // Priority 1 for FCFS
 
         // Measure start time of process
@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
     turnaround_time = 0;
 
     for (int i = 0; i < num_processes; i++) {
-        char* program = i == 0 ? "uniq" : "uniq_kernel"; // Run uniq for user and kernel
+        char* program = i == 0 ? "uniq" : "head"; // Run uniq for user and kernel
         long_task(i + 2, program); // Priority 2 and 3
 
         // Measure start time of process
