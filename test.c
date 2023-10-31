@@ -74,7 +74,12 @@ int main(int argc, char *argv[]) {
         int priority = atoi(argv[3 + 3 * i]);
         long_task(priority, program, file_name); 
 
-        // Measure start time of process
+       
+        
+    }
+     // Wait for child processes to complete
+    for (int i = 0; i < num_processes; i++) {
+         // Measure start time of process
         int start_time = uptime();
 
         // Wait for the child process to finish
