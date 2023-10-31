@@ -72,39 +72,20 @@ int main(int argc, char *argv[]) {
         char *program = argv[1 + 3 * i];
         char *file_name = argv[2 + 3 * i];
         int priority = atoi(argv[3 + 3 * i]);
-        //long_task(priority, program, file_name); 
+        long_task(priority, program, file_name); 
 
-int pid = fork();
-    if (pid < 0) {
-        printf(1, "Fork failed.\n");
-    } else if (pid == 0) {
-        // Child process
-        setpr(pid, priority); // Set the priority
-        char *argv[] = { program, file_name, 0 }; // Adjust the arguments as needed
-       
-        exec(program, argv);
-        
-        if (exec(program, argv) < 0) {
-            printf(1, "Exec failed for %s\n", program);
-        }
-        else 
-            printf(1, "Exec succeed for %s\n", program);
-        exit();
-    }
-    else
-        wait();
-        
         // Measure start time of process
         int start_time = uptime();
 
         // Wait for the child process to finish
-        //wait();
+        wait();
 
         // Measure finish time of process
         int finish_time = uptime();
 
         wait_time += start_time;
         turnaround_time += finish_time;
+        
     }
 
     // Calculate average wait and turnaround times for Priority-Based Scheduling
