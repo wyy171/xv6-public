@@ -24,8 +24,7 @@ void long_task(int priority, char* program) {
     }
 }
 
-#include "types.h"
-#include "user.h"
+
 int main(int argc, char *argv[]) {
     if (argc < 2 || (argc - 1) % 2 != 0) {
         printf(2, "Usage: %s [process_name priority]...\n", argv[0]);
@@ -99,7 +98,7 @@ int main(int argc, char *argv[]) {
 
     exit();
 }
-int main(int argc, char *argv[]) {
+/*int main(int argc, char *argv[]) {
     
     for (int i = 0; i < num_processes; i++) {
         char *process_name = argv[1 + 2 * i];
@@ -131,7 +130,7 @@ int main(int argc, char *argv[]) {
     exit();
 }
 
-
+*/
 /*
 int main(int argc, char *argv[]) {
     if (argc != 1) {
