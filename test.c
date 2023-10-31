@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < num_processes; i++) {
         
         char *program = argv[1 + 2 * i];
-        int priority = atoi(argv[2 + 2 * i);
+        int priority = atoi(argv[2 + 2 * i]);
         long_task(priority, program); // Priority 2 and 3
 
         // Measure start time of process
