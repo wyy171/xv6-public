@@ -24,7 +24,7 @@ void long_task(int priority, char* program, char *file_name) {
 
 
 int main(int argc, char *argv[]) {
-    if (argc < 2 || (argc - 1) % 2 != 0) {
+    if (argc < 2 || (argc - 1) % 3 != 0) {
         printf(2, "Usage: %s [process_name file_name priority]...\n", argv[0]);
         exit();
     }
@@ -36,9 +36,9 @@ int main(int argc, char *argv[]) {
     // FCFS Scheduling
     printf(1, "FCFS Scheduling:\n");
     for (int i = 0; i < num_processes; i++) {
-        char *program = argv[1 + 2 * i];
-        char *file_name = argv[2 + 2 * i];
-        //int priority = atoi(argv[3 + 2 * i]);
+        char *program = argv[1 + 3 * i];
+        char *file_name = argv[2 + 3 * i];
+        //int priority = atoi(argv[3 + 3 * i]);
         
         //char* program = i == 0 ? "uniq" : "head"; // Run uniq for user and kernel
         long_task(1, program, file_name); // Priority 1 for FCFS
@@ -67,9 +67,9 @@ int main(int argc, char *argv[]) {
 
     for (int i = 0; i < num_processes; i++) {
         
-        char *program = argv[1 + 2 * i];
-        char *file_name = argv[2 + 2 * i];
-        int priority = atoi(argv[3 + 2 * i]);
+        char *program = argv[1 + 3 * i];
+        char *file_name = argv[2 + 3 * i];
+        int priority = atoi(argv[3 + 3 * i]);
         long_task(priority, program, file_name); 
 
         // Measure start time of process
