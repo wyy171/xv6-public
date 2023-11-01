@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
     printf(1, "\nPriority-Based Scheduling:\n");
     wait_time = 0;
     turnaround_time = 0;
-
+/*
     for (int i = 0; i < num_processes; i++) {
         
         char *program = argv[1 + 3 * i];
@@ -93,7 +93,41 @@ int main(int argc, char *argv[]) {
         turnaround_time += finish_time-ctime;
         
     }
+*/
+    char *program = argv[1 ];
+    char *file_name = argv[2 ];
+    int priority = atoi(argv[3 ]);
+    long_task(priority, uniq, file_name); 
 
+    char *program = argv[4 ];
+    char *file_name = argv[5 ];
+    int priority = atoi(argv[6 ]);
+    long_task(priority, uniq, file_name); 
+
+    int start_time = uptime();
+
+        // Wait for the child process to finish
+        int ctime, etime;
+        waitx(&ctime, &etime);      
+
+        // Measure finish time of process
+        int finish_time = uptime();
+
+        wait_time += start_time-ctime;
+        turnaround_time += finish_time-ctime;
+
+    int start_time = uptime();
+
+        // Wait for the child process to finish
+        int ctime, etime;
+        waitx(&ctime, &etime);      
+
+        // Measure finish time of process
+        int finish_time = uptime();
+
+        wait_time += start_time-ctime;
+        turnaround_time += finish_time-ctime;
+    
     // Calculate average wait and turnaround times for Priority-Based Scheduling
     int avg_wait_time_priority = wait_time / num_processes;
     int avg_turnaround_time_priority = turnaround_time / num_processes;
