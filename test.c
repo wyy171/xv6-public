@@ -99,9 +99,9 @@ int main(int argc, char *argv[]) {
     int priority = atoi(argv[3 ]);
     long_task(priority, program, file_name); 
 
-    char *program = argv[4 ];
-    char *file_name = argv[5 ];
-    int priority = atoi(argv[6 ]);
+    *program = argv[4 ];
+    *file_name = argv[5 ];
+    priority = atoi(argv[6 ]);
     long_task(priority, program, file_name); 
 
     int start_time = uptime();
@@ -116,14 +116,14 @@ int main(int argc, char *argv[]) {
         wait_time += start_time-ctime;
         turnaround_time += finish_time-ctime;
 
-    int start_time = uptime();
+    start_time = uptime();
 
         // Wait for the child process to finish
-        int ctime, etime;
+        //int ctime, etime;
         waitx(&ctime, &etime);      
 
         // Measure finish time of process
-        int finish_time = uptime();
+        finish_time = uptime();
 
         wait_time += start_time-ctime;
         turnaround_time += finish_time-ctime;
