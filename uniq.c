@@ -85,11 +85,11 @@ uniq_compare(int input_fd, int output_fd, int cflag, int iflag, int dflag) {
 }
 
 int main(int argc, char *argv[]) {
-    uniq();
+    //uniq();
     int cflag = 0, iflag = 0, dflag = 0, fd=0;
     int ret=-1;
     
-       printf(1, "\nUniq command is getting executed in user mode.\n");
+       //printf(1, "\nUniq command is getting executed in user mode.\n");
     // Process command-line arguments
     if(argc < 2){
         //uniq_read(0,count, only_same, ignore_case);
