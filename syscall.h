@@ -25,3 +25,4 @@
 #define SYS_waitx  24
 #define SYS_ps     25
 #define SYS_setpr  26
+#define SYS_uniq_kernel   27
