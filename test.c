@@ -97,12 +97,12 @@ int main(int argc, char *argv[]) {
     char *program = argv[1 ];
     char *file_name = argv[2 ];
     int priority = atoi(argv[3 ]);
-    long_task(priority, uniq, file_name); 
+    long_task(priority, program, file_name); 
 
     char *program = argv[4 ];
     char *file_name = argv[5 ];
     int priority = atoi(argv[6 ]);
-    long_task(priority, uniq, file_name); 
+    long_task(priority, program, file_name); 
 
     int start_time = uptime();
 
