@@ -128,7 +128,12 @@ sys_uniq(void)
     uniq();
     return 0;
 }
-
+int 
+sys_uniq_kernel(void)
+{
+    uniq();
+    return 0;
+}
 int 
 sys_head(void)
 {
