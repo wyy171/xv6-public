@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
         // Wait for the child process to finish
         int ctime, etime;
         waitx(&ctime, &etime);      
-
+        wait();
         // Measure finish time of process
         int finish_time = uptime();
 
@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
     printf(1, "\nPriority-Based Scheduling:\n");
     wait_time = 0;
     turnaround_time = 0;
-/*
+
     for (int i = 0; i < num_processes; i++) {
         
         char *program = argv[1 + 3 * i];
@@ -84,7 +84,8 @@ int main(int argc, char *argv[]) {
 
         // Wait for the child process to finish
         int ctime, etime;
-        waitx(&ctime, &etime);      
+        waitx(&ctime, &etime);  
+        wait();
 
         // Measure finish time of process
         int finish_time = uptime();
@@ -93,40 +94,6 @@ int main(int argc, char *argv[]) {
         turnaround_time += finish_time-ctime;
         
     }
-*/
-    //char *program = argv[1 ];
-    //char *file_name = argv[2 ];
-    //int priority = atoi(argv[3 ]);
-    long_task(5, "uniq", "OS611example.txt"); 
-
-    //program = argv[4 ];
-    //file_name = argv[5 ];
-    //priority = atoi(argv[6 ]);
-    long_task(1, "head", "OS611example.txt"); 
-
-    int start_time = uptime();
-
-        // Wait for the child process to finish
-        int ctime, etime;
-        waitx(&ctime, &etime);      
-
-        // Measure finish time of process
-        int finish_time = uptime();
-
-        wait_time += start_time-ctime;
-        turnaround_time += finish_time-ctime;
-
-    start_time = uptime();
-
-        // Wait for the child process to finish
-        //int ctime, etime;
-        waitx(&ctime, &etime);      
-
-        // Measure finish time of process
-        finish_time = uptime();
-
-        wait_time += start_time-ctime;
-        turnaround_time += finish_time-ctime;
     
     // Calculate average wait and turnaround times for Priority-Based Scheduling
     int avg_wait_time_priority = wait_time / num_processes;
