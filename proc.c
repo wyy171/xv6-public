@@ -1021,13 +1021,13 @@ procdump(void)
 
 void
 uniq(void) {
-    cprintf("Uniq command is getting executed in kernel mode");
+    cprintf("\n\n Uniq command is getting executed in kernel mode");
 }
 void
 uniq_kernel(void) {
-    cprintf("Uniq command is getting executed in kernel mode");
+    cprintf("\n\n Uniq command is getting executed in kernel mode");
 }
 void
 head(void) {
-   cprintf("Head command is getting executed in kernel mode");
+   cprintf("\n\n Head command is getting executed in kernel mode");
 }
