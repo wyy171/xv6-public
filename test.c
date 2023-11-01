@@ -99,8 +99,8 @@ int main(int argc, char *argv[]) {
     int priority = atoi(argv[3 ]);
     long_task(priority, program, file_name); 
 
-    *program = argv[4 ];
-    *file_name = argv[5 ];
+    program = argv[4 ];
+    file_name = argv[5 ];
     priority = atoi(argv[6 ]);
     long_task(priority, program, file_name); 
 
