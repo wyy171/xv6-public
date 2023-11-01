@@ -24,6 +24,7 @@ char* sbrk(int);
 int sleep(int);
 int uptime(void);
 int uniq(void);
+int uniq_kernel(void);
 int head(void);
 int waitx(int*, int*);
 int ps(void);
