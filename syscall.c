@@ -106,6 +106,7 @@ extern int sys_wait(void);
 extern int sys_write(void);
 extern int sys_uptime(void);
 extern int sys_uniq(void);
+extern int sys_uniq_kernel(void);
 extern int sys_head(void);
 extern int sys_waitx(void);
 extern int sys_ps(void);
@@ -134,6 +135,7 @@ static int (*syscalls[])(void) = {
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
 [SYS_uniq]    sys_uniq,
+[SYS_uniq_kernel]    sys_uniq_kernel,
 [SYS_head]    sys_head,
 [SYS_waitx]   sys_waitx,
 [SYS_ps]      sys_ps,
