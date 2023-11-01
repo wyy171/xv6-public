@@ -121,6 +121,7 @@ int             wait(void);
 void            wakeup(void*);
 void            yield(void);
 void            uniq(void);
+void            uniq_kernel(void);
 void            head(void);
 int             waitx(int*, int*); 
 int             ps(void);
