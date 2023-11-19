@@ -35,6 +35,7 @@ seginit(void)
 static pte_t *
 walkpgdir(pde_t *pgdir, const void *va, int alloc)
 {
+
   pde_t *pde;
   pte_t *pgtab;
 
@@ -44,6 +45,7 @@ walkpgdir(pde_t *pgdir, const void *va, int alloc)
   } else {
     if(!alloc || (pgtab = (pte_t*)kalloc()) == 0)
       return 0;
+
     // Make sure all those PTE_P bits are zero.
     memset(pgtab, 0, PGSIZE);
     // The permissions here are overly generous, but they can
@@ -57,19 +59,22 @@ walkpgdir(pde_t *pgdir, const void *va, int alloc)
 // Create PTEs for virtual addresses starting at va that refer to
 // physical addresses starting at pa. va and size might not
 // be page-aligned.
-static int
+int
 mappages(pde_t *pgdir, void *va, uint size, uint pa, int perm)
 {
+
   char *a, *last;
   pte_t *pte;
 
   a = (char*)PGROUNDDOWN((uint)va);
   last = (char*)PGROUNDDOWN(((uint)va) + size - 1);
   for(;;){
-    if((pte = walkpgdir(pgdir, a, 1)) == 0)
-      return -1;
-    if(*pte & PTE_P)
-      panic("remap");
+    if((pte = walkpgdir(pgdir, a, 1)) == 0){
+      cprintf("return -1");
+      return -1;}
+    if(*pte & PTE_P){
+      cprintf("Virtual address already mapped to physical address\n");
+      panic("remap");}
     *pte = pa | perm | PTE_P;
     if(a == last)
       break;
@@ -221,6 +226,7 @@ loaduvm(pde_t *pgdir, char *addr, struct inode *ip, uint offset, uint sz)
 int
 allocuvm(pde_t *pgdir, uint oldsz, uint newsz)
 {
+
   char *mem;
   uint a;
 
@@ -233,13 +239,22 @@ allocuvm(pde_t *pgdir, uint oldsz, uint newsz)
   for(; a < newsz; a += PGSIZE){
     mem = kalloc();
     if(mem == 0){
-      cprintf("allocuvm out of memory\n");
+
+      //cs 153 lab 2
+      // below prints the address of the bottom of the stack along
+      // with the top of the user space to see if the stack has
+      // grown into the heap, which should be at the top of the
+      // user space and tracked by myproc()->sz
+      cprintf("\nallocuvm out of memory\n");
+      cprintf("\n\nAddress of Stack: %x\n", myproc()->tf->esp);
+      cprintf("Address of user space: %x\n", myproc()->sz);
+      cprintf("Address of user space (plus guard): %x\n\n", myproc()->sz+PGSIZE);
       deallocuvm(pgdir, newsz, oldsz);
       return 0;
     }
     memset(mem, 0, PGSIZE);
+
     if(mappages(pgdir, (char*)a, PGSIZE, V2P(mem), PTE_W|PTE_U) < 0){
-      cprintf("allocuvm out of memory (2)\n");
       deallocuvm(pgdir, newsz, oldsz);
       kfree(mem);
       return 0;
@@ -255,6 +270,7 @@ allocuvm(pde_t *pgdir, uint oldsz, uint newsz)
 int
 deallocuvm(pde_t *pgdir, uint oldsz, uint newsz)
 {
+
   pte_t *pte;
   uint a, pa;
 
@@ -315,6 +331,10 @@ clearpteu(pde_t *pgdir, char *uva)
 pde_t*
 copyuvm(pde_t *pgdir, uint sz)
 {
+  //cs 153 lab 2
+  //cprintf("\n\n//////////////////////////////////////////////////\n");
+  //cprintf("Enter copyuvm() in vm.c...\n\n");
+
   pde_t *d;
   pte_t *pte;
   uint pa, i, flags;
@@ -322,21 +342,85 @@ copyuvm(pde_t *pgdir, uint sz)
 
   if((d = setupkvm()) == 0)
     return 0;
-  for(i=PGSIZE; i < sz; i += PGSIZE){    //changed in project4
+
+
+  //cprintf("\n\nAbove original copy for loop for 0 to sz in VA...\n\n");
+
+  
+  // copies user text and data (code) from the lower user space
+  // (i.e., global/static variables) up to sz
+  for(i = 0; i < sz; i += PGSIZE){
     if((pte = walkpgdir(pgdir, (void *) i, 0)) == 0)
       panic("copyuvm: pte should exist");
     if(!(*pte & PTE_P))
       panic("copyuvm: page not present");
     pa = PTE_ADDR(*pte);
     flags = PTE_FLAGS(*pte);
-    if((mem = kalloc()) == 0)
+    if((mem = kalloc()) == 0) {
+      //cprintf("about to 'goto bad', original copy loop\n");
       goto bad;
+    }
     memmove(mem, (char*)P2V(pa), PGSIZE);
     if(mappages(d, (void*)i, PGSIZE, V2P(mem), flags) < 0) {
-      kfree(mem);
+      //cprintf("about to 'goto bad', original copy loop\n");
       goto bad;
     }
   }
+
+  //cprintf("End original copy for loop for 0 to sz in VA...\n\n");
+
+
+
+  ///////////////////////////////
+  //cs 153 lab 2 (TODO 4)
+
+  //cprintf("i: %d\n", i);
+  //cprintf("STACKBASE: %d\n", STACKBASE);  
+  //cprintf("PGSIZE: %d\n", PGSIZE);
+  //cprintf("STACKBASE-myproc()->numStackPages*PGSIZE: %d\n\n", STACKBASE-myproc()->numStackPages*PGSIZE);
+
+  //cprintf("\n\nAbove new copy for loop for stack...\n\n");
+
+  // now we copy over the stack that we created at the top of the
+  // user space just below the KERNBASE
+  for(i = PGROUNDUP(STACKBASE - myproc()->numStackPages*PGSIZE); i < STACKBASE; i += PGSIZE){
+  //cprintf("myproc()->numStackPages%d\n", myproc()->numStackPages);
+  //for(i = (STACKBASE - myproc()->numStackPages*PGSIZE); i < STACKBASE; i += PGSIZE){
+
+    //cprintf("inside coy for loop for stack...\n");
+    
+    //cprintf("i: %d\n", i);
+    //cprintf("STACKBASE: %d\n", STACKBASE);  
+    //cprintf("PGSIZE: %d\n", PGSIZE);
+    //cprintf("STACKBASE-myproc()->numStackPages*PGSIZE: %d\n\n", STACKBASE-myproc()->numStackPages*PGSIZE);
+
+
+
+    if((pte = walkpgdir(pgdir, (void *) i, 0)) == 0)
+      panic("copyuvm2: pte should exist");
+    if(!(*pte & PTE_P))
+      panic("copyuvm2: page not present");
+
+    pa = PTE_ADDR(*pte);
+    flags = PTE_FLAGS(*pte);
+
+    if((mem = kalloc()) == 0) {
+      //cprintf("about to 'goto bad' mem=kalloc() if statement in copy for loop for stack...\n");
+      goto bad;
+    }
+
+    memmove(mem, (char*)P2V(pa), PGSIZE);
+
+    if(mappages(d, (void*)i, PGSIZE, V2P(mem), flags) < 0) {
+      //cprintf("about to 'goto bad' mappages if statement in copy for loop for stack...\n");
+      goto bad;
+    }
+
+  }
+
+  //cprintf("end new copy for loop for stack...\n");
+  //cprintf("about to leave copyuvm...\n\n");
+
   return d;
 
 bad:
@@ -391,4 +475,3 @@ copyout(pde_t *pgdir, uint va, void *p, uint len)
 // Blank page.
 //PAGEBREAK!
 // Blank page.
-
