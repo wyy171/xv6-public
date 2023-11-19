@@ -110,8 +110,8 @@ exec(char *path, char **argv)
   curproc->sz = sz;
   curproc->tf->eip = elf.entry;  // main
   curproc->tf->esp = sp;
-  //curproc->stack_addr = STACKBASE - PGSIZE;
-  curproc->stack_addr = curproc->stack_addr - PGSIZE;
+  curproc->stack_addr = STACKBASE - PGSIZE;
+  //curproc->stack_addr = curproc->stack_addr - PGSIZE;
   switchuvm(curproc);
   freevm(oldpgdir);
   return 0;
