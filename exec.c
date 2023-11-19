@@ -77,7 +77,7 @@ exec(char *path, char **argv)
 
   // Allocate a gap of at least 5 pages
   for (char *va = (char *)(sp - PGSIZE); va > (char *)hp; va -= PGSIZE) {
-    if (allocuvm(pgdir, va - PGSIZE, va) == 0)
+    if (allocuvm(pgdir, (uint)va - PGSIZE, va) == 0)
       goto bad;
   }
 
@@ -88,7 +88,7 @@ exec(char *path, char **argv)
   // Allocate a page for the code
   if (allocuvm(pgdir, cp - PGSIZE, cp) == 0)
     goto bad;
-
+/*
   // Set the program's data pages to be invalid
   for (char *va = (char *)(cp - PGSIZE); va > (char *)up; va -= PGSIZE) {
     // Use walkaddr to get the page table entry
@@ -98,7 +98,7 @@ exec(char *path, char **argv)
     *pte &= ~PTE_P; // Mark the page table entry as invalid (clear the PTE_P bit)
   }
   
-  
+  */
   // Push argument strings, prepare rest of stack in ustack.
   for(argc = 0; argv[argc]; argc++) {
     if(argc >= MAXARG)
