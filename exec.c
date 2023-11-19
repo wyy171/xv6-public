@@ -12,7 +12,7 @@ exec(char *path, char **argv)
 {
   char *s, *last;
   int i, off;
-  uint argc, sz, sp, hp, ustack[3+MAXARG+1];
+  uint argc, sz, sp, hp, cp, up, ustack[3+MAXARG+1];
   struct elfhdr elf;
   struct inode *ip;
   struct proghdr ph;
@@ -64,35 +64,40 @@ exec(char *path, char **argv)
 
   sz = PGROUNDUP(sz); // round up user code to be a full page
 
-  //allocate guard space between code and heap
-  if((sz = allocuvm(pgdir, sz, sz + PGSIZE)) == 0)
-    goto bad;
-  clearpteu(pgdir, (char*)(sz - PGSIZE));
-
-  sp = STACKBASE; // make stack pointer point to just below the KERNBASE to start(redundant sp = newstk)
-
-
-  sp = USERTOP;  // Assuming USERTOP is a constant representing the top of the user address space
-  hp = sp - PGSIZE * 5;  // Leave 5 pages unallocated between stack and heap
+  
+  // Set the starting address of the stack, heap, and code
+  sp = USERTOP;          // Assuming USERTOP is 640KB
+  hp = sp - PGSIZE * 5;  // Leave at least 5 pages unallocated between stack and heap
+  cp = hp - PGSIZE;       // Code starts right before the heap
+  up = 0;                // ADDR = 0x0
 
   // Allocate a page for the stack
   if (allocuvm(pgdir, sp - PGSIZE, sp) == 0)
     goto bad;
 
-  // Existing code...
+  // Allocate a gap of at least 5 pages
+  for (char *va = (char *)(sp - PGSIZE); va > (char *)hp; va -= PGSIZE) {
+    if (allocuvm(pgdir, va - PGSIZE, va) == 0)
+      goto bad;
+  }
 
   // Allocate a page for the heap
   if (allocuvm(pgdir, hp - PGSIZE, hp) == 0)
     goto bad;
 
-// Set the program's data pages to be invalid
-  for (char *va = (char *)(sp - PGSIZE); va >= (char *)(hp + PGSIZE); va -= PGSIZE) {
-    // Mark the page table entry as invalid (clear the PTE_P bit)
-    pte_t *pte = walkpgdir(pgdir, va, 0);
+  // Allocate a page for the code
+  if (allocuvm(pgdir, cp - PGSIZE, cp) == 0)
+    goto bad;
+
+  // Set the program's data pages to be invalid
+  for (char *va = (char *)(cp - PGSIZE); va > (char *)up; va -= PGSIZE) {
+    // Use walkaddr to get the page table entry
+    pte_t *pte = walkaddr(pgdir, va, 0);
     if (pte == 0)
       goto bad;
-    *pte &= ~PTE_P;
+    *pte &= ~PTE_P; // Mark the page table entry as invalid (clear the PTE_P bit)
   }
+  
   
   // Push argument strings, prepare rest of stack in ustack.
   for(argc = 0; argv[argc]; argc++) {
