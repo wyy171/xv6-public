@@ -12,7 +12,7 @@ exec(char *path, char **argv)
 {
   char *s, *last;
   int i, off;
-  uint argc, sz, sp, ustack[3+MAXARG+1];
+  uint argc, sz, sp, hp, ustack[3+MAXARG+1];
   struct elfhdr elf;
   struct inode *ip;
   struct proghdr ph;
@@ -71,14 +71,29 @@ exec(char *path, char **argv)
 
   sp = STACKBASE; // make stack pointer point to just below the KERNBASE to start(redundant sp = newstk)
 
-  // now create the first page for the stack
-  uint newstk;
-  if((newstk = allocuvm(pgdir, STACKBASE - PGSIZE, STACKBASE)) == 0)
-    goto bad;
-  
-  sp = newstk;
-  curproc->numStackPages = 1; // says we created a page for the stack
 
+  sp = USERTOP;  // Assuming USERTOP is a constant representing the top of the user address space
+  hp = sp - PGSIZE * 5;  // Leave 5 pages unallocated between stack and heap
+
+  // Allocate a page for the stack
+  if (allocuvm(pgdir, sp - PGSIZE, sp) == 0)
+    goto bad;
+
+  // Existing code...
+
+  // Allocate a page for the heap
+  if (allocuvm(pgdir, hp - PGSIZE, hp) == 0)
+    goto bad;
+
+// Set the program's data pages to be invalid
+  for (char *va = (char *)(sp - PGSIZE); va >= (char *)(hp + PGSIZE); va -= PGSIZE) {
+    // Mark the page table entry as invalid (clear the PTE_P bit)
+    pte_t *pte = walkpgdir(pgdir, va, 0);
+    if (pte == 0)
+      goto bad;
+    *pte &= ~PTE_P;
+  }
+  
   // Push argument strings, prepare rest of stack in ustack.
   for(argc = 0; argv[argc]; argc++) {
     if(argc >= MAXARG)
