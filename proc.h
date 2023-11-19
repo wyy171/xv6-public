@@ -38,7 +38,6 @@ enum procstate { UNUSED, EMBRYO, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };
 struct proc {
   uint sz;                     // Size of process memory (bytes) // Assuming sz is the end of the heap,  Changed in project4 Part B
   uint stack_addr;	           // Stack Starting address,  Changed in project4 Part B
-  uint numStackPages;          // number of pages in the stack. Changed in project4 Part B
   //uint topStack;					     // Current position for the top of the stack
   pde_t* pgdir;                // Page table
   char *kstack;                // Bottom of kernel stack for this process
@@ -56,6 +55,8 @@ struct proc {
   int etime;                  // End time
   int rtime;                  // Total time
   int priority;                // priority, a number between 0 and 100, 0 => highest priority, 100 => lowest priority.
+  uint numStackPages;          // number of pages in the stack. Changed in project4 Part B
+  
 };
 
 // Process memory is laid out contiguously, low addresses first:
