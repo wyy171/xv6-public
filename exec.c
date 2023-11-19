@@ -12,7 +12,7 @@ exec(char *path, char **argv)
 {
   char *s, *last;
   int i, off;
-  uint argc, sz, sp, hp, cp, up, ustack[3+MAXARG+1];
+  uint argc, sz, sp, hp, cp, ustack[3+MAXARG+1];
   struct elfhdr elf;
   struct inode *ip;
   struct proghdr ph;
@@ -69,7 +69,6 @@ exec(char *path, char **argv)
   sp = USERTOP;          // Assuming USERTOP is 640KB
   hp = sp - PGSIZE * 5;  // Leave at least 5 pages unallocated between stack and heap
   cp = hp - PGSIZE;       // Code starts right before the heap
-  up = 0;                // ADDR = 0x0
 
   // Allocate a page for the stack
   if (allocuvm(pgdir, sp - PGSIZE, sp) == 0)
@@ -77,7 +76,7 @@ exec(char *path, char **argv)
 
   // Allocate a gap of at least 5 pages
   for (char *va = (char *)(sp - PGSIZE); va > (char *)hp; va -= PGSIZE) {
-    if (allocuvm(pgdir, (uint)va - PGSIZE, va) == 0)
+    if (allocuvm(pgdir, (uint)va - PGSIZE, (uint)va) == 0)
       goto bad;
   }
 
@@ -90,7 +89,7 @@ exec(char *path, char **argv)
     goto bad;
 /*
   // Set the program's data pages to be invalid
-  for (char *va = (char *)(cp - PGSIZE); va > (char *)up; va -= PGSIZE) {
+  for (char *va = (char *)(cp - PGSIZE); va > (char *)0; va -= PGSIZE) {
     // Use walkaddr to get the page table entry
     pte_t *pte = walkaddr(pgdir, va, 0);
     if (pte == 0)
