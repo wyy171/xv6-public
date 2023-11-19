@@ -17,10 +17,10 @@ exec(char *path, char **argv)
   struct inode *ip;
   struct proghdr ph;
   pde_t *pgdir, *oldpgdir;
-  struct proc *curproc = myproc();
+  struct proc *curproc = myproc();//TODO
 
   begin_op();
- 
+
   if((ip = namei(path)) == 0){
     end_op();
     cprintf("exec: fail\n");
@@ -39,9 +39,7 @@ exec(char *path, char **argv)
     goto bad;
 
   // Load program into memory.
-  //sz=PGSIZE; changed in project4 Part A
-  sz = 0; 
-  
+  sz = 0;
   for(i=0, off=elf.phoff; i<elf.phnum; i++, off+=sizeof(ph)){
     if(readi(ip, (char*)&ph, off, sizeof(ph)) != sizeof(ph))
       goto bad;
@@ -61,16 +59,16 @@ exec(char *path, char **argv)
   iunlockput(ip);
   end_op();
   ip = 0;
-  sp = 0;  //changed in project4 Part B
-  
-  // Allocate two pages at the next page boundary.
-  // Make the first inaccessible.  Use the second as the user stack.
-  sz = PGROUNDUP(sz);
-  if((sz = allocuvm(pgdir, sz, sz + 2*PGSIZE)) == 0)
+
+  sp = 0;
+
+  sz = PGROUNDUP(sz); // round up user code to be a full page
+
+  //allocate guard space between code and heap
+  if((sz = allocuvm(pgdir, sz, sz + PGSIZE)) == 0)
     goto bad;
-  clearpteu(pgdir, (char*)(sz - 2*PGSIZE));
-  
-  //sp = USERTOP;  //sp = sz; changed in project4 Part B
+  clearpteu(pgdir, (char*)(sz - PGSIZE));
+
   sp = STACKBASE; // make stack pointer point to just below the KERNBASE to start(redundant sp = newstk)
 
   // now create the first page for the stack
@@ -80,8 +78,7 @@ exec(char *path, char **argv)
   
   sp = newstk;
   curproc->numStackPages = 1; // says we created a page for the stack
- 
-  
+
   // Push argument strings, prepare rest of stack in ustack.
   for(argc = 0; argv[argc]; argc++) {
     if(argc >= MAXARG)
@@ -92,7 +89,6 @@ exec(char *path, char **argv)
     ustack[3+argc] = sp;
   }
   ustack[3+argc] = 0;
-
   ustack[0] = 0xffffffff;  // fake return PC
   ustack[1] = argc;
   ustack[2] = sp - (argc+1)*4;  // argv pointer
@@ -107,16 +103,16 @@ exec(char *path, char **argv)
       last = s+1;
   safestrcpy(curproc->name, last, sizeof(curproc->name));
 
+
   // Commit to the user image.
   oldpgdir = curproc->pgdir;
   curproc->pgdir = pgdir;
   curproc->sz = sz;
-  curproc->stack_addr = STACKBASE - PGSIZE;  //changed in project4 Part B
   curproc->tf->eip = elf.entry;  // main
   curproc->tf->esp = sp;
+  curproc->stack_addr = STACKBASE - PGSIZE;
   switchuvm(curproc);
   freevm(oldpgdir);
-  //curproc->priority = 2;
   return 0;
 
  bad:
