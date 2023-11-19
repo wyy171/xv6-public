@@ -38,6 +38,8 @@ enum procstate { UNUSED, EMBRYO, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };
 struct proc {
   uint sz;                     // Size of process memory (bytes) // Assuming sz is the end of the heap,  Changed in project4 Part B
   uint stack_addr;	           // Stack Starting address,  Changed in project4 Part B
+  uint numStackPages;          // number of pages in the stack. Changed in project4 Part B
+
   pde_t* pgdir;                // Page table
   char *kstack;                // Bottom of kernel stack for this process
   enum procstate state;        // Process state
