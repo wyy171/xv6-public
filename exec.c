@@ -17,7 +17,7 @@ exec(char *path, char **argv)
   struct inode *ip;
   struct proghdr ph;
   pde_t *pgdir, *oldpgdir;
-  struct proc *curproc = myproc();
+  struct proc *curproc = myproc();//TODO
 
   begin_op();
 
@@ -60,6 +60,8 @@ exec(char *path, char **argv)
   end_op();
   ip = 0;
 
+  sp = 0;
+
   sz = PGROUNDUP(sz); // round up user code to be a full page
 
   //allocate guard space between code and heap
@@ -67,11 +69,11 @@ exec(char *path, char **argv)
     goto bad;
   clearpteu(pgdir, (char*)(sz - PGSIZE));
 
-  sp = USERTOP; // make stack pointer point to just below the KERNBASE to start(redundant sp = newstk)
+  sp = STACKBASE; // make stack pointer point to just below the KERNBASE to start(redundant sp = newstk)
 
   // now create the first page for the stack
   uint newstk;
-  if((newstk = allocuvm(pgdir, USERTOP - PGSIZE, USERTOP)) == 0)
+  if((newstk = allocuvm(pgdir, STACKBASE - PGSIZE, STACKBASE)) == 0)
     goto bad;
   
   sp = newstk;
@@ -87,7 +89,6 @@ exec(char *path, char **argv)
     ustack[3+argc] = sp;
   }
   ustack[3+argc] = 0;
-
   ustack[0] = 0xffffffff;  // fake return PC
   ustack[1] = argc;
   ustack[2] = sp - (argc+1)*4;  // argv pointer
@@ -96,21 +97,12 @@ exec(char *path, char **argv)
   if(copyout(pgdir, sp, ustack, (3+argc+1)*4) < 0)
     goto bad;
 
-/*
-  hp = sp - PGSIZE * 5;  // Leave at least 5 pages unallocated between stack and heap
-
-  // Allocate a page for the heap
-  if (allocuvm(pgdir, hp - PGSIZE, hp) == 0) {
-    goto bad;
-  }
-*/
- 
- 
   // Save program name for debugging.
   for(last=s=path; *s; s++)
     if(*s == '/')
       last = s+1;
   safestrcpy(curproc->name, last, sizeof(curproc->name));
+
 
   // Commit to the user image.
   oldpgdir = curproc->pgdir;
@@ -118,10 +110,9 @@ exec(char *path, char **argv)
   curproc->sz = sz;
   curproc->tf->eip = elf.entry;  // main
   curproc->tf->esp = sp;
-  curproc->stack_addr = USERTOP - PGSIZE;
+  curproc->stack_addr = STACKBASE - PGSIZE;
   switchuvm(curproc);
   freevm(oldpgdir);
-  //curproc->priority = 2;
   return 0;
 
  bad:
