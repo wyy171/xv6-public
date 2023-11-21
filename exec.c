@@ -12,7 +12,7 @@ exec(char *path, char **argv)
 {
   char *s, *last;
   int i, off;
-  uint argc, sz, sp, ustack[3+MAXARG+1];
+  uint argc, sz, sp, hp, cp, ustack[3+MAXARG+1];
   struct elfhdr elf;
   struct inode *ip;
   struct proghdr ph;
@@ -67,6 +67,22 @@ exec(char *path, char **argv)
     goto bad;
   clearpteu(pgdir, (char*)(sz - 2*PGSIZE));
   sp = sz;
+
+  hp = sp - PGSIZE * 5;  // Leave at least 5 pages unallocated between stack and heap
+  cp = hp - PGSIZE;       // Code starts right before the heap
+  // Allocate a page for the stack
+  if (allocuvm(pgdir, sp - PGSIZE, sp) == 0) {
+    goto bad;
+  }
+  // Allocate a page for the heap
+  if (allocuvm(pgdir, hp - PGSIZE, hp) == 0) {
+    goto bad;
+  }
+
+  // Allocate a page for the code
+  if (allocuvm(pgdir, cp - PGSIZE, cp) == 0) {
+    goto bad;
+  }
 
   // Push argument strings, prepare rest of stack in ustack.
   for(argc = 0; argv[argc]; argc++) {
