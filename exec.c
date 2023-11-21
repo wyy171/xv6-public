@@ -12,7 +12,7 @@ exec(char *path, char **argv)
 {
   char *s, *last;
   int i, off;
-  uint argc, sz, sp, ustack[3+MAXARG+1];
+  uint argc, sz, sp, hp, ustack[3+MAXARG+1];
   struct elfhdr elf;
   struct inode *ip;
   struct proghdr ph;
@@ -60,30 +60,23 @@ exec(char *path, char **argv)
   end_op();
   ip = 0;
 
-  // Allocate 4 pages at the next page boundary.
-  // Make the 3 unmapped inaccessible.  Use the forth as the user stack.
-  sz = PGROUNDUP(sz);
-  if((sz = allocuvm(pgdir, sz, sz + 3*PGSIZE)) == 0)
-    goto bad;
-  clearpteu(pgdir, (char*)(sz - 3*PGSIZE));
-  sp = sz;
+  sz = PGROUNDUP(sz); // round up user code to be a full page
 
-  //hp = sp - PGSIZE * 5;  // Leave at least 5 pages unallocated between stack and heap
-  //cp = hp - PGSIZE;       // Code starts right before the heap
-  // Allocate a page for the stack
-  if (allocuvm(pgdir, sp, sp+PGSIZE) == 0) {
+  //allocate guard space between code and heap
+  if((sz = allocuvm(pgdir, sz, sz + PGSIZE)) == 0)
     goto bad;
-  }
- /* // Allocate a page for the heap
-  if (allocuvm(pgdir, hp - PGSIZE, hp) == 0) {
-    goto bad;
-  }
+  clearpteu(pgdir, (char*)(sz - PGSIZE));
 
-  // Allocate a page for the code
-  if (allocuvm(pgdir, cp - PGSIZE, cp) == 0) {
+  sp = USERTOP; // make stack pointer point to just below the KERNBASE to start(redundant sp = newstk)
+
+  // now create the first page for the stack
+  uint newstk;
+  if((newstk = allocuvm(pgdir, USERTOP - PGSIZE, USERTOP)) == 0)
     goto bad;
-  }
-*/
+  
+  sp = newstk;
+  curproc->numStackPages = 1; // says we created a page for the stack
+
   // Push argument strings, prepare rest of stack in ustack.
   for(argc = 0; argv[argc]; argc++) {
     if(argc >= MAXARG)
@@ -103,6 +96,16 @@ exec(char *path, char **argv)
   if(copyout(pgdir, sp, ustack, (3+argc+1)*4) < 0)
     goto bad;
 
+
+  hp = sp - PGSIZE * 5;  // Leave at least 5 pages unallocated between stack and heap
+
+  // Allocate a page for the heap
+  if (allocuvm(pgdir, hp - PGSIZE, hp) == 0) {
+    goto bad;
+  }
+
+ 
+ 
   // Save program name for debugging.
   for(last=s=path; *s; s++)
     if(*s == '/')
