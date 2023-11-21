@@ -12,7 +12,7 @@ exec(char *path, char **argv)
 {
   char *s, *last;
   int i, off;
-  uint argc, sz, sp, hp, ustack[3+MAXARG+1];
+  uint argc, sz, sp, ustack[3+MAXARG+1];
   struct elfhdr elf;
   struct inode *ip;
   struct proghdr ph;
@@ -96,14 +96,14 @@ exec(char *path, char **argv)
   if(copyout(pgdir, sp, ustack, (3+argc+1)*4) < 0)
     goto bad;
 
-
+/*
   hp = sp - PGSIZE * 5;  // Leave at least 5 pages unallocated between stack and heap
 
   // Allocate a page for the heap
   if (allocuvm(pgdir, hp - PGSIZE, hp) == 0) {
     goto bad;
   }
-
+*/
  
  
   // Save program name for debugging.
