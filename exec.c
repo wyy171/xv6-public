@@ -74,7 +74,7 @@ exec(char *path, char **argv)
   if (allocuvm(pgdir, sp - PGSIZE, sp) == 0) {
     goto bad;
   }
-  // Allocate a page for the heap
+ /* // Allocate a page for the heap
   if (allocuvm(pgdir, hp - PGSIZE, hp) == 0) {
     goto bad;
   }
@@ -83,7 +83,7 @@ exec(char *path, char **argv)
   if (allocuvm(pgdir, cp - PGSIZE, cp) == 0) {
     goto bad;
   }
-
+*/
   // Push argument strings, prepare rest of stack in ustack.
   for(argc = 0; argv[argc]; argc++) {
     if(argc >= MAXARG)
