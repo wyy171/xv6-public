@@ -60,18 +60,18 @@ exec(char *path, char **argv)
   end_op();
   ip = 0;
 
-  // Allocate two pages at the next page boundary.
-  // Make the first inaccessible.  Use the second as the user stack.
+  // Allocate 4 pages at the next page boundary.
+  // Make the 3 unmapped inaccessible.  Use the forth as the user stack.
   sz = PGROUNDUP(sz);
-  if((sz = allocuvm(pgdir, sz, sz + 2*PGSIZE)) == 0)
+  if((sz = allocuvm(pgdir, sz, sz + 3*PGSIZE)) == 0)
     goto bad;
-  clearpteu(pgdir, (char*)(sz - 2*PGSIZE));
+  clearpteu(pgdir, (char*)(sz - 3*PGSIZE));
   sp = sz;
 
   //hp = sp - PGSIZE * 5;  // Leave at least 5 pages unallocated between stack and heap
   //cp = hp - PGSIZE;       // Code starts right before the heap
   // Allocate a page for the stack
-  if (allocuvm(pgdir, sp - PGSIZE, sp) == 0) {
+  if (allocuvm(pgdir, sp, sp+PGSIZE) == 0) {
     goto bad;
   }
  /* // Allocate a page for the heap
