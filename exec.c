@@ -118,6 +118,7 @@ exec(char *path, char **argv)
   curproc->sz = sz;
   curproc->tf->eip = elf.entry;  // main
   curproc->tf->esp = sp;
+  curproc->stack_addr = USERTOP - PGSIZE;
   switchuvm(curproc);
   freevm(oldpgdir);
   //curproc->priority = 2;
