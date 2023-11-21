@@ -12,7 +12,7 @@ exec(char *path, char **argv)
 {
   char *s, *last;
   int i, off;
-  uint argc, sz, sp, hp, cp, ustack[3+MAXARG+1];
+  uint argc, sz, sp, hp, ustack[3+MAXARG+1];
   struct elfhdr elf;
   struct inode *ip;
   struct proghdr ph;
@@ -69,7 +69,7 @@ exec(char *path, char **argv)
   sp = sz;
 
   hp = sp - PGSIZE * 5;  // Leave at least 5 pages unallocated between stack and heap
-  cp = hp - PGSIZE;       // Code starts right before the heap
+  //cp = hp - PGSIZE;       // Code starts right before the heap
   // Allocate a page for the stack
   if (allocuvm(pgdir, sp - PGSIZE, sp) == 0) {
     goto bad;
