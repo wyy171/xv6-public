@@ -14,33 +14,57 @@
 // to a saved program counter, and then the first argument.
 
 // Fetch the int at addr from the current process.
+// Fetch the int at addr from process p.
 int
-fetchint(uint addr, int *ip)
+fetchint(struct proc *p, uint addr, int *ip)
 {
-  struct proc *curproc = myproc();
+  if(p->pid == 1 && p->stack_sz == 0) {
+    if(addr >= proc->sz || addr+4 > p->sz)
+      return -1;
+  } else {
+    if((addr >= p->sz && addr < p->stack_sz) ||
+        (addr+4 > p->sz && addr+4 < p->stack_sz) ||
+        addr < 2*PGSIZE || addr+4 > USERTOP)
+      return -1;
+  }
 
-  if(addr >= curproc->sz || addr+4 > curproc->sz)
-    return -1;
   *ip = *(int*)(addr);
   return 0;
 }
 
-// Fetch the nul-terminated string at addr from the current process.
+// Fetch the nul-terminated string at addr from process p.
 // Doesn't actually copy the string - just sets *pp to point at it.
 // Returns length of string, not including nul.
 int
-fetchstr(uint addr, char **pp)
+fetchstr(struct proc *p, uint addr, char **pp)
 {
   char *s, *ep;
-  struct proc *curproc = myproc();
 
-  if(addr >= curproc->sz)
-    return -1;
-  *pp = (char*)addr;
-  ep = (char*)curproc->sz;
-  for(s = *pp; s < ep; s++){
-    if(*s == 0)
-      return s - *pp;
+  if(p->pid == 1 && p->stack_sz == 0) {
+    if(addr >= proc->sz)
+      return -1;
+    *pp = (char*)addr;
+    ep = (char*)p->sz;
+    for(s = *pp; s < ep; s++)
+      if(*s == 0)
+        return s - *pp;
+  } else {
+    // In heap
+    if(addr >= 2*PGSIZE && addr < p->sz) {
+      *pp = (char*)addr;
+      ep = (char*)p->sz;
+      for(s = *pp; s < ep; s++)
+        if(*s == 0)
+          return s - *pp;
+    }
+    // In stack
+    if(addr >= p->stack_sz && addr < USERTOP) {
+      *pp = (char*)addr;
+      ep = (char*)USERTOP;
+      for(s = *pp; s < ep; s++)
+        if(*s == 0)
+          return s - *pp;
+    }
   }
   return -1;
 }
@@ -49,7 +73,7 @@ fetchstr(uint addr, char **pp)
 int
 argint(int n, int *ip)
 {
-  return fetchint((myproc()->tf->esp) + 4 + 4*n, ip);
+  return fetchint(proc, proc->tf->esp + 4 + 4*n, ip);
 }
 
 // Fetch the nth word-sized system call argument as a pointer
