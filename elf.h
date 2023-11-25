@@ -22,11 +22,21 @@ struct elfhdr {
 };
 
 // Program section header
-struct proghdr {
+/*struct proghdr {
   uint type;
   uint off;
   uint vaddr;
   uint paddr;
+  uint filesz;
+  uint memsz;
+  uint flags;
+  uint align;
+};*/
+struct proghdr {
+  uint type;
+  uint offset;
+  uint va;
+  uint pa;
   uint filesz;
   uint memsz;
   uint flags;
