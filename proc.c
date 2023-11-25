@@ -168,6 +168,9 @@ growproc(int n)
   struct proc *curproc = myproc();
 
   sz = curproc->sz;
+
+  if((sz + n + 5*PGSIZE) > (curproc->stack_sz))
+      return -1;
   if(n > 0){
     if((sz = allocuvm(curproc->pgdir, sz, sz + n)) == 0)
       return -1;
@@ -179,6 +182,7 @@ growproc(int n)
   switchuvm(curproc);
   return 0;
 }
+
 
 // Create a new process copying p as the parent.
 // Sets up stack to return as if from system call.
