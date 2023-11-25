@@ -107,9 +107,8 @@ argstr(int n, char **pp)
   int addr;
   if(argint(n, &addr) < 0)
     return -1;
-  return fetchstr(addr, pp);
+  return fetchstr(proc, addr, pp);
 }
-
 
 
 extern int sys_chdir(void);
