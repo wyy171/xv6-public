@@ -414,7 +414,7 @@ sys_exec(void)
       argv[i] = 0;
       break;
     }
-    if(fetchstr(proc, uarg, &argv[i]) < 0)
+    if(fetchstr(curproc, uarg, &argv[i]) < 0)
       return -1;
   }
   return exec(path, argv);
