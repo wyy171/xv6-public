@@ -34,19 +34,20 @@ idtinit(void)
 void
 trap(struct trapframe *tf)
 {
+  struct proc *curproc = myproc();//TODO
   if(tf->trapno == T_SYSCALL){
-    if(proc->killed)
+    if(curproc->killed)
       exit();
-    proc->tf = tf;
+    curproc->tf = tf;
     syscall();
-    if(proc->killed)
+    if(curproc->killed)
       exit();
     return;
   }
 
   switch(tf->trapno){
   case T_IRQ0 + IRQ_TIMER:
-    if(cpu->id == 0){
+    if(cpuid() == 0){
       acquire(&tickslock);
       ticks++;
       wakeup(&ticks);
@@ -72,63 +73,63 @@ trap(struct trapframe *tf)
   case T_IRQ0 + 7:
   case T_IRQ0 + IRQ_SPURIOUS:
     cprintf("cpu%d: spurious interrupt at %x:%x\n",
-            cpu->id, tf->cs, tf->eip);
+            cpuid(), tf->cs, tf->eip);
     lapiceoi();
     break;
 
   case T_PGFLT:
     // Page fault case. Allocate new page for stack if possible.
-    if(proc == 0 || (tf->cs&3) == 0){
+    if(curproc == 0 || (tf->cs&3) == 0){
         cprintf("unexpected trap %d from cpu %d eip %x (cr2=0x%x)\n",
-        tf->trapno, cpu->id, tf->eip, rcr2());
+        tf->trapno, cpuid(), tf->eip, rcr2());
         panic("trap");
     } else {
         //   cprintf("proc->stack_sz:%x proc->sz:%x\n",proc->stack_sz, proc->sz);
         uint st_address = rcr2();
-        if (st_address <= proc->stack_sz && st_address >= proc->stack_sz-PGSIZE && proc->stack_sz-PGSIZE*6 >= proc->sz) {
-            if((allocuvm(proc->pgdir, proc->stack_sz-PGSIZE, proc->stack_sz)) != 0) {
-                proc->stack_sz -= PGSIZE;
+        if (st_address <= curproc->stack_sz && st_address >= curproc->stack_sz-PGSIZE && curproc->stack_sz-PGSIZE*6 >= curproc->sz) {
+            if((allocuvm(curproc->pgdir, curproc->stack_sz-PGSIZE, curproc->stack_sz)) != 0) {
+                curproc->stack_sz -= PGSIZE;
                 return;
             }
         }else{
             // Segmentation fault. Kill process.
             cprintf("pid %d %s: trap %d err %d on cpu %d "
                 "eip 0x%x addr 0x%x--kill proc\n",
-                proc->pid, proc->name, tf->trapno, tf->err, cpu->id, tf->eip,
+                curproc->pid, curproc->name, tf->trapno, tf->err, cpuid(), tf->eip,
             rcr2());
-            proc->killed = 1;
+            curproc->killed = 1;
         }
     }
     break;
 
   default:
 
-    if(proc == 0 || (tf->cs&3) == 0){
+    if(curproc == 0 || (tf->cs&3) == 0){
       // In kernel, it must be our mistake.
       cprintf("unexpected trap %d from cpu %d eip %x (cr2=0x%x)\n",
-              tf->trapno, cpu->id, tf->eip, rcr2());
+              tf->trapno, cpuid(), tf->eip, rcr2());
       panic("trap");
     }
     // In user space, assume process misbehaved.
     cprintf("pid %d %s: trap %d err %d on cpu %d "
             "eip 0x%x addr 0x%x--kill proc\n",
-            proc->pid, proc->name, tf->trapno, tf->err, cpu->id, tf->eip,
+            curproc->pid, curproc->name, tf->trapno, tf->err, cpuid(), tf->eip,
             rcr2());
-    proc->killed = 1;
+    curproc->killed = 1;
   }
 
   // Force process exit if it has been killed and is in user space.
   // (If it is still executing in the kernel, let it keep running
   // until it gets to the regular system call return.)
-  if(proc && proc->killed && (tf->cs&3) == DPL_USER)
+  if(curproc && curproc->killed && (tf->cs&3) == DPL_USER)
     exit();
 
   // Force process to give up CPU on clock tick.
   // If interrupts were on while locks held, would need to check nlock.
-  if(proc && proc->state == RUNNING && tf->trapno == T_IRQ0+IRQ_TIMER)
+  if(curproc && curproc->state == RUNNING && tf->trapno == T_IRQ0+IRQ_TIMER)
     yield();
 
   // Check if the process has been killed since we yielded
-  if(proc && proc->killed && (tf->cs&3) == DPL_USER)
+  if(curproc && curproc->killed && (tf->cs&3) == DPL_USER)
     exit();
 }
