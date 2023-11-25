@@ -18,8 +18,9 @@
 int
 fetchint(struct proc *p, uint addr, int *ip)
 {
+  struct proc *curproc = myproc();//TODO
   if(p->pid == 1 && p->stack_sz == 0) {
-    if(addr >= proc->sz || addr+4 > p->sz)
+    if(addr >= curproc->sz || addr+4 > p->sz)
       return -1;
   } else {
     if((addr >= p->sz && addr < p->stack_sz) ||
@@ -39,9 +40,10 @@ int
 fetchstr(struct proc *p, uint addr, char **pp)
 {
   char *s, *ep;
+  struct proc *curproc = myproc();//TODO
 
   if(p->pid == 1 && p->stack_sz == 0) {
-    if(addr >= proc->sz)
+    if(addr >= curproc->sz)
       return -1;
     *pp = (char*)addr;
     ep = (char*)p->sz;
@@ -73,7 +75,8 @@ fetchstr(struct proc *p, uint addr, char **pp)
 int
 argint(int n, int *ip)
 {
-  return fetchint(proc, proc->tf->esp + 4 + 4*n, ip);
+  struct proc *curproc = myproc();//TODO
+  return fetchint(curproc, curproc->tf->esp + 4 + 4*n, ip);
 }
 
 // Fetch the nth word-sized system call argument as a pointer
