@@ -157,8 +157,8 @@ char*           strncpy(char*, const char*, int);
 int             argint(int, int*);
 int             argptr(int, char**, int);
 int             argstr(int, char**);
-int             fetchint(uint, int*);
-int             fetchstr(uint, char**);
+int             fetchint(struct proc*, uint, int*);
+int             fetchstr(struct proc*, uint, char**);
 void            syscall(void);
 
 // timer.c
