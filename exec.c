@@ -1,6 +1,5 @@
 #include "types.h"
 #include "param.h"
-#include "memlayout.h"
 #include "mmu.h"
 #include "proc.h"
 #include "defs.h"
@@ -17,20 +16,14 @@ exec(char *path, char **argv)
   struct inode *ip;
   struct proghdr ph;
   pde_t *pgdir, *oldpgdir;
-  struct proc *curproc = myproc();//TODO
 
-  begin_op();
-
-  if((ip = namei(path)) == 0){
-    end_op();
-    cprintf("exec: fail\n");
+  if((ip = namei(path)) == 0)
     return -1;
-  }
   ilock(ip);
   pgdir = 0;
 
   // Check ELF header
-  if(readi(ip, (char*)&elf, 0, sizeof(elf)) != sizeof(elf))
+  if(readi(ip, (char*)&elf, 0, sizeof(elf)) < sizeof(elf))
     goto bad;
   if(elf.magic != ELF_MAGIC)
     goto bad;
@@ -39,7 +32,8 @@ exec(char *path, char **argv)
     goto bad;
 
   // Load program into memory.
-  sz = 0;
+  // sz = 0;
+  sz = 2*PGSIZE;
   for(i=0, off=elf.phoff; i<elf.phnum; i++, off+=sizeof(ph)){
     if(readi(ip, (char*)&ph, off, sizeof(ph)) != sizeof(ph))
       goto bad;
@@ -47,48 +41,35 @@ exec(char *path, char **argv)
       continue;
     if(ph.memsz < ph.filesz)
       goto bad;
-    if(ph.vaddr + ph.memsz < ph.vaddr)
+    if((sz = allocuvm(pgdir, sz, ph.va + ph.memsz)) == 0)
       goto bad;
-    if((sz = allocuvm(pgdir, sz, ph.vaddr + ph.memsz)) == 0)
-      goto bad;
-    if(ph.vaddr % PGSIZE != 0)
-      goto bad;
-    if(loaduvm(pgdir, (char*)ph.vaddr, ip, ph.off, ph.filesz) < 0)
+    if(loaduvm(pgdir, (char*)ph.va, ip, ph.offset, ph.filesz) < 0)
       goto bad;
   }
   iunlockput(ip);
-  end_op();
   ip = 0;
 
-  sp = 0;
-
-  sz = PGROUNDUP(sz); // round up user code to be a full page
-
-  //allocate guard space between code and heap
-  if((sz = allocuvm(pgdir, sz, sz + PGSIZE)) == 0)
+  // Allocate a one-page stack at the next page boundary
+  sz = PGROUNDUP(sz);
+  // if((sz = allocuvm(pgdir, sz, sz + PGSIZE)) == 0)
+  //   goto bad;
+  uint stack_size = USERTOP-PGSIZE;
+  sp = allocuvm(pgdir, stack_size, USERTOP);
+  if(sp == 0)
     goto bad;
-  clearpteu(pgdir, (char*)(sz - PGSIZE));
-
-  sp = STACKBASE; // make stack pointer point to just below the KERNBASE to start(redundant sp = newstk)
-
-  // now create the first page for the stack
-  uint newstk;
-  if((newstk = allocuvm(pgdir, STACKBASE - PGSIZE, STACKBASE)) == 0)
-    goto bad;
-  
-  sp = newstk;
-  curproc->numStackPages = 1; // says we created a page for the stack
 
   // Push argument strings, prepare rest of stack in ustack.
   for(argc = 0; argv[argc]; argc++) {
     if(argc >= MAXARG)
       goto bad;
-    sp = (sp - (strlen(argv[argc]) + 1)) & ~3;
+    sp -= strlen(argv[argc]) + 1;
+    sp &= ~3;
     if(copyout(pgdir, sp, argv[argc], strlen(argv[argc]) + 1) < 0)
       goto bad;
     ustack[3+argc] = sp;
   }
   ustack[3+argc] = 0;
+
   ustack[0] = 0xffffffff;  // fake return PC
   ustack[1] = argc;
   ustack[2] = sp - (argc+1)*4;  // argv pointer
@@ -101,26 +82,24 @@ exec(char *path, char **argv)
   for(last=s=path; *s; s++)
     if(*s == '/')
       last = s+1;
-  safestrcpy(curproc->name, last, sizeof(curproc->name));
-
+  safestrcpy(proc->name, last, sizeof(proc->name));
 
   // Commit to the user image.
-  oldpgdir = curproc->pgdir;
-  curproc->pgdir = pgdir;
-  curproc->sz = sz;
-  curproc->tf->eip = elf.entry;  // main
-  curproc->tf->esp = sp;
-  curproc->stack_addr = STACKBASE - PGSIZE;
-  switchuvm(curproc);
+  oldpgdir = proc->pgdir;
+  proc->pgdir = pgdir;
+  proc->sz = sz;
+  proc->stack_sz = stack_size;
+  proc->tf->eip = elf.entry;  // main
+  proc->tf->esp = sp;
+  switchuvm(proc);
   freevm(oldpgdir);
+
   return 0;
 
  bad:
   if(pgdir)
     freevm(pgdir);
-  if(ip){
+  if(ip)
     iunlockput(ip);
-    end_op();
-  }
   return -1;
 }
