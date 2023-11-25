@@ -105,9 +105,10 @@ int
 argstr(int n, char **pp)
 {
   int addr;
+  struct proc *curproc = myproc();//TODO
   if(argint(n, &addr) < 0)
     return -1;
-  return fetchstr(proc, addr, pp);
+  return fetchstr(curproc, addr, pp);
 }
 
 
